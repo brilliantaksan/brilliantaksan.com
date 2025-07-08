@@ -252,14 +252,14 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 1.1em;
+    height: 1.15em;
     background: linear-gradient(45deg, #FFE55C, #FFF200);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(255, 229, 92, 0.3);
     animation: glow 2s ease-in-out infinite alternate;
     transition: border-radius 0.7s ease-in, width 0.7s ease-in, transform 0.7s ease-in;
     z-index: 11;
-    width: 4.0em; /* Initial width for HEARD */
+    width: 5.2em; /* Initial width for HEARD with padding */
 }
 
 .word-content {
@@ -1099,10 +1099,11 @@ body {
     .rotating-container {
         height: 1.3em;
         margin-left: 0.1em;
+        min-width: 6em;
     }
     
     .morphing-background {
-        height: 1.1em;
+        height: 1.15em;
     }
     
     .shape-word {
@@ -1126,10 +1127,11 @@ body {
     .rotating-container {
         height: 1.2em;
         margin-left: 0.1em;
+        min-width: 5.5em;
     }
     
     .morphing-background {
-        height: 1em;
+        height: 1.1em;
     }
     
     .shape-word {
@@ -1137,13 +1139,8 @@ body {
         letter-spacing: -0.01em;
     }
     
-    .rotating-container {
-        min-width: 4em;
-        margin-left: 0.02em;
-    }
-    
     .hero-title .to-feel {
-        margin-right: 0.02em;
+        margin-right: 0.04em;
     }
 }
 

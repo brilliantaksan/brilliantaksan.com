@@ -159,15 +159,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 const containerMinWidth = `${baseWidth + 0.5}em`;
                 rotatingContainer.style.minWidth = containerMinWidth;
                 
-                // For very long words, we need extra space to prevent crushing
-                if (baseWidth >= 7.5) {
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
+                // Adaptive spacing with generous mobile margins
+                if (baseWidth >= 9.0) {
+                    // Very long words (UNDERSTOOD, APPRECIATED)
+                    rotatingContainer.style.minWidth = `${baseWidth + 2.0}em`;
+                    toFeelElement.style.marginRight = '0.12em';
+                } else if (baseWidth >= 7.0) {
+                    // Long words (EVERYTHING)
+                    rotatingContainer.style.minWidth = `${baseWidth + 1.8}em`;
                     toFeelElement.style.marginRight = '0.1em';
-                } else if (baseWidth >= 5.5) {
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
+                } else if (baseWidth >= 5.0) {
+                    // Medium words (VALUED)
+                    rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
                     toFeelElement.style.marginRight = '0.08em';
                 } else {
-                    rotatingContainer.style.minWidth = `${baseWidth + 0.8}em`;
+                    // Short words (HEARD, SEEN)
+                    rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
+                    toFeelElement.style.marginRight = '0.06em';
                 }
             }
         }
