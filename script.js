@@ -143,39 +143,28 @@ document.addEventListener('DOMContentLoaded', function() {
             this.background.style.borderRadius = style.borderRadius;
             this.background.style.transform = `translate(-50%, -50%) ${style.bgTransform}`;
             
-            // Dynamically adjust "to feel" positioning to always be right next to the yellow box
-            const toFeelElement = document.querySelector('.to-feel');
-            const rotatingContainer = document.querySelector('.rotating-container');
-            
-            if (toFeelElement && rotatingContainer) {
-                const baseWidth = parseFloat(style.width);
+            // Only adjust spacing on mobile (≤768px), keep desktop fixed
+            if (window.innerWidth <= 768) {
+                const toFeelElement = document.querySelector('.to-feel');
+                const rotatingContainer = document.querySelector('.rotating-container');
                 
-                // Calculate exact positioning to keep "to feel" right next to the yellow box
-                // Account for the yellow box width and add minimal gap
-                const minGap = '0.05em';
-                toFeelElement.style.marginRight = minGap;
-                
-                // Ensure the rotating container has enough width for the yellow box plus padding
-                const containerMinWidth = `${baseWidth + 0.5}em`;
-                rotatingContainer.style.minWidth = containerMinWidth;
-                
-                // Adaptive spacing with generous mobile margins
-                if (baseWidth >= 9.0) {
-                    // Very long words (UNDERSTOOD, APPRECIATED)
-                    rotatingContainer.style.minWidth = `${baseWidth + 2.0}em`;
-                    toFeelElement.style.marginRight = '0.12em';
-                } else if (baseWidth >= 7.0) {
-                    // Long words (EVERYTHING)
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.8}em`;
-                    toFeelElement.style.marginRight = '0.1em';
-                } else if (baseWidth >= 5.0) {
-                    // Medium words (VALUED)
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
-                    toFeelElement.style.marginRight = '0.08em';
-                } else {
-                    // Short words (HEARD, SEEN)
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
-                    toFeelElement.style.marginRight = '0.06em';
+                if (toFeelElement && rotatingContainer) {
+                    const baseWidth = parseFloat(style.width);
+                    
+                    // Mobile-only adaptive spacing
+                    if (baseWidth >= 9.0) {
+                        rotatingContainer.style.minWidth = `${baseWidth + 2.0}em`;
+                        toFeelElement.style.marginRight = '0.12em';
+                    } else if (baseWidth >= 7.0) {
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.8}em`;
+                        toFeelElement.style.marginRight = '0.1em';
+                    } else if (baseWidth >= 5.0) {
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
+                        toFeelElement.style.marginRight = '0.08em';
+                    } else {
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
+                        toFeelElement.style.marginRight = '0.06em';
+                    }
                 }
             }
         }

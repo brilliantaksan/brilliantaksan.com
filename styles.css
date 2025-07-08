@@ -242,8 +242,7 @@ body {
     height: 1.4em;
     z-index: 10;
     margin-left: 0.05em;
-    min-width: 6em;
-    transition: min-width 0.7s ease-in;
+    width: 12em; /* Fixed width on desktop to prevent layout shifts */
     flex-shrink: 0;
 }
 
@@ -370,6 +369,10 @@ body {
     margin-bottom: 3rem;
     font-weight: 500;
     line-height: 1.4;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
 }
 
 .section-title {
@@ -571,7 +574,8 @@ body {
     border: 3px solid rgba(255, 229, 92, 0.6);
     box-shadow: 0 20px 60px rgba(107, 115, 255, 0.2);
     margin: 0 auto;
-    /* Removed unstable transform effects */
+    /* Fixed width to prevent subtitle shifting */
+    min-width: 1200px;
 }
 
 .cta-container {
@@ -1096,10 +1100,17 @@ body {
         line-height: 0.9;
     }
     
+    .hero-content {
+        min-width: unset;
+        padding: 2rem 3rem;
+    }
+    
     .rotating-container {
         height: 1.3em;
         margin-left: 0.1em;
+        width: auto;
         min-width: 6em;
+        transition: min-width 0.7s ease-in;
     }
     
     .morphing-background {
@@ -1108,6 +1119,11 @@ body {
     
     .shape-word {
         font-size: clamp(2.6rem, 7vw, 4.5rem);
+    }
+    
+    .hero-subtitle {
+        max-width: 100%;
+        margin-bottom: 2rem;
     }
 }
 
@@ -1121,7 +1137,17 @@ body {
         font-size: clamp(2.2rem, 8.5vw, 3.8rem); 
         line-height: 0.85;
     }
-    .hero-subtitle { font-size: 1.1rem; }
+    
+    .hero-content {
+        padding: 2rem 1.5rem;
+    }
+    
+    .hero-subtitle { 
+        font-size: 1.1rem;
+        max-width: 100%;
+        margin-bottom: 2rem;
+    }
+    
     .section-title { font-size: 2rem; }
     
     .rotating-container {
