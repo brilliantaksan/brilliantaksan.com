@@ -161,11 +161,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // For very long words, we need extra space to prevent crushing
                 if (baseWidth >= 7.5) {
-                    rotatingContainer.style.minWidth = `${baseWidth + 1.0}em`;
-                    toFeelElement.style.marginRight = '0.08em';
+                    rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
+                    toFeelElement.style.marginRight = '0.1em';
                 } else if (baseWidth >= 5.5) {
+                    rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
+                    toFeelElement.style.marginRight = '0.08em';
+                } else {
                     rotatingContainer.style.minWidth = `${baseWidth + 0.8}em`;
-                    toFeelElement.style.marginRight = '0.06em';
                 }
             }
         }
