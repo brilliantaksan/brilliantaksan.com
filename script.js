@@ -614,3 +614,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('✨ Listening Table: Smooth interactions with rotating text and sparkles loaded!');
 }); 
+}); 
