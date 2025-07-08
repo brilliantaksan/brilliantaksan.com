@@ -1,0 +1,197 @@
+{
+  "design_system": {
+    "name": "Listening Table Design System",
+    "version": "1.0.0",
+    "description": "A warm, community-focused design system emphasizing connection, accessibility, and playful interactions"
+  },
+  "color_palette": {
+    "primary": {
+      "purple": "#6B73FF",
+      "deep_blue": "#2E3A87",
+      "bright_yellow": "#FFE55C",
+      "soft_purple": "#8B9DE8"
+    },
+    "secondary": {
+      "white": "#FFFFFF",
+      "light_gray": "#F5F5F5",
+      "warm_beige": "#F0E6D2",
+      "text_dark": "#2C2C2C"
+    },
+    "accent": {
+      "highlight_yellow": "#FFF200",
+      "warm_orange": "#FF9500",
+      "soft_pink": "#FFB6C1"
+    }
+  },
+  "typography": {
+    "hierarchy": {
+      "hero": {
+        "font_weight": "800-900",
+        "font_size": "4rem-8rem",
+        "line_height": "0.9-1.1",
+        "letter_spacing": "tight",
+        "case": "mixed"
+      },
+      "heading_1": {
+        "font_weight": "700-800",
+        "font_size": "2.5rem-4rem",
+        "line_height": "1.1-1.2",
+        "letter_spacing": "tight"
+      },
+      "heading_2": {
+        "font_weight": "600-700",
+        "font_size": "1.5rem-2.5rem",
+        "line_height": "1.2-1.3"
+      },
+      "body": {
+        "font_weight": "400-500",
+        "font_size": "1rem-1.2rem",
+        "line_height": "1.4-1.6"
+      },
+      "caption": {
+        "font_weight": "400",
+        "font_size": "0.875rem-1rem",
+        "line_height": "1.3-1.5"
+      }
+    },
+    "font_families": {
+      "primary": "Modern sans-serif (Inter, SF Pro, or similar)",
+      "secondary": "Readable sans-serif for body text"
+    },
+    "text_treatments": {
+      "emphasis": "Bold weight with yellow highlight background",
+      "brand_voice": "Conversational, warm, encouraging tone",
+      "key_phrases": "ALL CAPS for impact words in headings"
+    }
+  },
+  "layout_system": {
+    "grid": {
+      "type": "12-column responsive grid",
+      "max_width": "1200px-1400px",
+      "margins": "2rem-4rem",
+      "gutters": "1rem-2rem"
+    },
+    "spacing": {
+      "unit": "8px",
+      "scale": [8, 16, 24, 32, 48, 64, 96, 128, 192, 256],
+      "section_padding": "4rem-8rem vertical",
+      "component_spacing": "2rem-4rem between elements"
+    },
+    "breakpoints": {
+      "mobile": "320px-768px",
+      "tablet": "768px-1024px",
+      "desktop": "1024px+"
+    }
+  },
+  "component_patterns": {
+    "buttons": {
+      "primary": {
+        "background": "bright_yellow",
+        "text_color": "text_dark",
+        "border_radius": "8px-12px",
+        "padding": "16px 32px",
+        "font_weight": "600-700",
+        "hover_state": "slight_darken + subtle_shadow",
+        "text_transform": "uppercase"
+      },
+      "secondary": {
+        "background": "transparent",
+        "border": "2px solid current_color",
+        "text_color": "primary_purple",
+        "same_styling": "as primary otherwise"
+      }
+    },
+    "cards": {
+      "video_cards": {
+        "aspect_ratio": "16:9 or 4:3",
+        "border_radius": "12px-16px",
+        "shadow": "soft, subtle",
+        "overlay": "gradient or solid color with text",
+        "hover_state": "scale(1.02) + shadow_increase"
+      },
+      "content_cards": {
+        "background": "white or light_gray",
+        "padding": "2rem-3rem",
+        "border_radius": "12px-16px",
+        "shadow": "minimal, soft"
+      }
+    },
+    "illustrations": {
+      "style": "Simple, friendly, cartoon-like",
+      "elements": [
+        "Smiling sun character",
+        "Cloud characters with faces",
+        "Simple human figures",
+        "Hand-drawn aesthetic"
+      ],
+      "color_scheme": "Primary palette with yellow accents",
+      "positioning": "Floating, scattered naturally around content"
+    }
+  },
+  "visual_identity": {
+    "brand_elements": {
+      "logo_style": "Bold, condensed typography",
+      "icon_style": "Rounded, friendly, minimal",
+      "badge_style": "Circular with border, clean typography"
+    },
+    "photography": {
+      "style": "Candid, community-focused, natural lighting",
+      "settings": "Outdoor, casual, real people interactions",
+      "treatment": "Warm color grading, natural exposure"
+    },
+    "graphic_elements": {
+      "arrows": "Hand-drawn style, curved, playful",
+      "dividers": "Minimal, subtle",
+      "backgrounds": "Solid colors, subtle gradients"
+    }
+  },
+  "interaction_design": {
+    "animation": {
+      "duration": "200ms-400ms",
+      "easing": "ease-out, smooth",
+      "types": ["hover_scale", "fade_in", "slide_up", "gentle_bounce"]
+    },
+    "feedback": {
+      "hover_states": "Always present, subtle",
+      "loading_states": "Friendly, non-intrusive",
+      "error_states": "Warm, helpful messaging"
+    },
+    "navigation": {
+      "style": "Clean, horizontal top nav",
+      "active_states": "Yellow accent or bold weight",
+      "mobile": "Hamburger menu with full-screen overlay"
+    }
+  },
+  "content_strategy": {
+    "messaging": {
+      "tone": "Warm, inclusive, encouraging",
+      "voice": "Conversational, authentic, community-focused",
+      "key_themes": ["Connection", "Listening", "Community", "Growth", "Change"]
+    },
+    "content_types": {
+      "hero_sections": "Large impact statement + supporting description",
+      "statistics": "Large numbers with context and meaning",
+      "testimonials": "Real stories, authentic voices",
+      "process_steps": "Clear, numbered progression with visuals"
+    }
+  },
+  "accessibility": {
+    "color_contrast": "WCAG AA compliant",
+    "typography": "Readable font sizes, good line height",
+    "interactive_elements": "Clear focus states, adequate touch targets",
+    "content_structure": "Logical heading hierarchy, semantic HTML"
+  },
+  "responsive_behavior": {
+    "mobile_first": true,
+    "image_scaling": "Responsive images with appropriate aspect ratios",
+    "text_scaling": "Fluid typography between breakpoints",
+    "layout_changes": "Stack horizontally arranged elements vertically on mobile",
+    "navigation": "Collapse to hamburger menu on mobile"
+  },
+  "implementation_notes": {
+    "css_approach": "Utility-first (Tailwind) or component-based",
+    "image_optimization": "WebP format, lazy loading, responsive sizing",
+    "performance": "Lightweight animations, optimized assets",
+    "browser_support": "Modern browsers, graceful degradation"
+  }
+}
