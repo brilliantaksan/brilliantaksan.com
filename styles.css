@@ -202,7 +202,7 @@ body {
 /* Hero Section */
 .hero-title {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(2.4rem, 6vw, 5.8rem);
+    font-size: clamp(3.2rem, 8vw, 7rem);
     font-weight: 800;
     line-height: 0.95;
     color: #2E3A87;
@@ -280,7 +280,7 @@ body {
     opacity: 0;
     font-family: 'Inter', sans-serif;
     font-weight: 800;
-    font-size: clamp(2.4rem, 6vw, 5.8rem);
+    font-size: clamp(3.2rem, 8vw, 7rem);
     white-space: nowrap;
     letter-spacing: -0.02em;
     transition: all 0.4s ease-in;
@@ -548,7 +548,7 @@ body {
 
 /* Hero Section Layout - Fixed Wiggling */
 .hero {
-    min-height: 100vh;
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -556,6 +556,7 @@ body {
     position: relative;
     background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 30%, #8B9DE8 70%, #6B73FF 100%);
     overflow: hidden;
+    padding: 1rem 0;
 }
 
 .hero-content {
@@ -1085,8 +1086,13 @@ body {
 }
 
 @media (max-width: 768px) {
+    .hero { 
+        min-height: 80vh;
+        padding: 0.5rem 0;
+    }
+    
     .hero-title { 
-        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        font-size: clamp(2.6rem, 7vw, 4.5rem);
         line-height: 0.9;
     }
     
@@ -1100,13 +1106,18 @@ body {
     }
     
     .shape-word {
-        font-size: clamp(1.8rem, 5vw, 2.4rem);
+        font-size: clamp(2.6rem, 7vw, 4.5rem);
     }
 }
 
 @media (max-width: 480px) {
+    .hero { 
+        min-height: 75vh;
+        padding: 0.2rem 0;
+    }
+    
     .hero-title { 
-        font-size: 1.6rem; 
+        font-size: clamp(2.2rem, 8.5vw, 3.8rem); 
         line-height: 0.85;
     }
     .hero-subtitle { font-size: 1.1rem; }
@@ -1122,7 +1133,7 @@ body {
     }
     
     .shape-word {
-        font-size: 1.6rem;
+        font-size: clamp(2.2rem, 8.5vw, 3.8rem);
         letter-spacing: -0.01em;
     }
     
