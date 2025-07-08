@@ -49,14 +49,14 @@ document.addEventListener('DOMContentLoaded', function() {
             this.background = container.querySelector('.morphing-background');
             this.wordContent = container.querySelector('.word-content');
             
-            // Define morphing styles for each word
+            // Define morphing styles for each word with generous mobile-friendly padding
             this.wordStyles = [
-                { width: '4.0em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // HEARD
-                { width: '3.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },  // SEEN
-                { width: '4.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },   // VALUED
-                { width: '7.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // UNDERSTOOD
-                { width: '8.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // APPRECIATED
-                { width: '7.0em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }   // EVERYTHING
+                { width: '5.2em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // HEARD
+                { width: '4.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },  // SEEN
+                { width: '5.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },   // VALUED
+                { width: '9.2em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // UNDERSTOOD
+                { width: '10.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // APPRECIATED
+                { width: '8.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }   // EVERYTHING
             ];
             
             // Adjust for mobile screens
