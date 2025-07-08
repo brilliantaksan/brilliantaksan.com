@@ -1,34 +1,6 @@
 [build]
-  # Since this is a static site, no build command needed
+  # No build command needed for static site
   command = ""
   
-  # Tell Netlify where to find your files (root directory)
-  publish = "."
-
-[build.environment]
-  # Ensure proper Node.js version if needed
-  NODE_VERSION = "18"
-
-[[headers]]
-  # Apply headers to all routes
-  for = "/*"
-  [headers.values]
-    # Enable CORS if needed
-    Access-Control-Allow-Origin = "*"
-    # Cache static assets
-    Cache-Control = "public, max-age=31536000"
-    # Security headers
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-
-[[headers]]
-  # Don't cache HTML files
-  for = "*.html"
-  [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-
-# Handle client-side routing (for SPA behavior)
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200 
+  # Publish from root directory 
+  publish = "." 
