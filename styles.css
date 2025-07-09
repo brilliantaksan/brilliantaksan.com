@@ -67,17 +67,26 @@ body {
     color: #2C2C2C;
     background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 50%, #F0E6D2 100%);
     overflow-x: hidden;
-    cursor: none;
 }
 
-/* Custom Cursor - Light-hearted sun design */
+body {
+    cursor: none !important;
+}
+
+/* Custom Cursor - Enhanced Sun Design */
 .cursor {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     position: fixed;
+    top: 0;
+    left: 0;
     pointer-events: none;
-    z-index: 9999;
-    transition: transform 0.3s ease-out;
+    z-index: 999999;
+    transition: transform 0.2s ease-out;
+    mix-blend-mode: normal;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
 }
 
 .cursor::before {
@@ -86,12 +95,14 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px;
-    height: 10px;
-    background: radial-gradient(circle, #FFE55C 0%, #FFF200 70%);
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(45deg, #FFE55C 0%, #FFA500 100%);
     border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255, 229, 92, 0.9), 0 2px 6px rgba(107, 115, 255, 0.2);
-    filter: drop-shadow(0 1px 4px rgba(107, 115, 255, 0.3));
+    box-shadow: 
+        0 0 15px rgba(255, 229, 92, 0.9), 
+        0 0 30px rgba(255, 165, 0, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3);
     z-index: 3;
 }
 
@@ -101,22 +112,20 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 24px;
-    height: 24px;
-    background: radial-gradient(circle at center, transparent 60%, #FFE55C 65%, transparent 70%);
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     opacity: 0.8;
-    animation: sun-rotate 12s ease-in-out infinite;
-    filter: drop-shadow(0 1px 3px rgba(107, 115, 255, 0.25));
+    animation: sun-rotate 6s linear infinite;
     box-shadow: 
-        0 -12px 0 -9px #FFE55C,
-        8px -8px 0 -9px #FFE55C,
-        12px 0 0 -9px #FFE55C,
-        8px 8px 0 -9px #FFE55C,
-        0 12px 0 -9px #FFE55C,
-        -8px 8px 0 -9px #FFE55C,
-        -12px 0 0 -9px #FFE55C,
-        -8px -8px 0 -9px #FFE55C;
+        0 -16px 0 -13px #FFE55C,
+        11px -11px 0 -13px #FFE55C,
+        16px 0 0 -13px #FFE55C,
+        11px 11px 0 -13px #FFE55C,
+        0 16px 0 -13px #FFE55C,
+        -11px 11px 0 -13px #FFE55C,
+        -16px 0 0 -13px #FFE55C,
+        -11px -11px 0 -13px #FFE55C;
 }
 
 @keyframes sun-rotate {
@@ -126,7 +135,19 @@ body {
 }
 
 .cursor.grow {
-    transform: scale(2);
+    transform: scale(1.8) !important;
+    transition: transform 0.2s ease-out !important;
+}
+
+.cursor.grow::before {
+    box-shadow: 
+        0 0 20px rgba(255, 229, 92, 1), 
+        0 0 40px rgba(255, 165, 0, 0.7),
+        inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.cursor.grow::after {
+    opacity: 1;
 }
 
 .container {
@@ -772,78 +793,85 @@ body {
 
 /* Testimonials */
 .testimonials {
-    padding: 8rem 0;
-    background: linear-gradient(135deg, #F0E6D2 0%, #FFFFFF 100%);
+    padding: 4rem 0 6rem 0;
+    background: #F8F9FA;
 }
 
 .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2.5rem;
-    margin-top: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .testimonial {
-    background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
-    padding: 3rem;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
     border-radius: 20px;
-    box-shadow: 0 15px 50px rgba(46, 58, 135, 0.1);
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
-    border-left: 6px solid #6B73FF;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(255, 229, 92, 0.2);
 }
 
 .testimonial-decoration {
     position: absolute;
-    top: -30px;
-    right: -30px;
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(45deg, rgba(255, 229, 92, 0.1), rgba(107, 115, 255, 0.1));
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 229, 92, 0.1) 0%, transparent 70%);
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: all 0.6s ease;
 }
 
 .testimonial:hover .testimonial-decoration {
-    transform: scale(1.5) rotate(180deg);
+    transform: scale(1.5) rotate(45deg);
+    background: radial-gradient(circle, rgba(255, 229, 92, 0.2) 0%, transparent 70%);
 }
 
 .testimonial::before {
-    content: '"';
+    content: '';
     position: absolute;
-    top: -20px;
-    left: 20px;
-    font-size: 6rem;
-    color: #FFE55C;
-    font-family: 'Inter', serif;
-    font-weight: 900;
-    opacity: 0.3;
-    line-height: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(46, 58, 135, 0.02) 0%, rgba(255, 229, 92, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 20px;
 }
 
 .testimonial:hover {
-    transform: translateY(-12px) rotateX(5deg) rotateY(2deg);
-    box-shadow: 0 30px 80px rgba(46, 58, 135, 0.2);
-    border-left-color: #FFE55C;
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
+    border-color: rgba(255, 229, 92, 0.4);
+}
+
+.testimonial:hover::before {
+    opacity: 1;
 }
 
 .testimonial p {
-    font-size: 1.2rem;
-    color: #2C2C2C;
+    font-size: 1.1rem;
     line-height: 1.7;
-    margin-bottom: 2rem;
-    font-style: italic;
-    font-weight: 400;
+    color: #2C2C2C;
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .testimonial-author {
-    color: #6B73FF;
     font-weight: 600;
-    font-size: 1rem;
+    color: #6B73FF;
+    font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-family: 'Inter', sans-serif;
+    position: relative;
+    z-index: 2;
 }
 
 /* Final CTA */
@@ -1351,4 +1379,279 @@ html {
     .footer-text {
         font-size: 0.9rem;
     }
+}
+
+/* Stacked Journal Carousel - Clean & Simple */
+.journal-carousel {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.journal-entry {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 650px;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.1),
+        0 5px 15px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border: 2px solid rgba(255, 229, 92, 0.3);
+    backdrop-filter: blur(10px);
+    
+    /* Smooth transitions for all transform properties */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Make all cards visible by default */
+    display: block !important;
+    opacity: 0;
+    
+    /* Remove drag cursor since we're removing drag functionality */
+    cursor: default;
+    user-select: text;
+}
+
+/* Override any magnetic effects for journal entries */
+.journal-entry.magnetic-card {
+    transform: translate(-50%, -50%) !important;
+}
+
+.journal-entry.magnetic-card:hover {
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Stacked Card States */
+.journal-entry.current {
+    z-index: 10;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg) !important;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 15px 25px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 229, 92, 0.6);
+}
+
+.journal-entry.behind-1 {
+    z-index: 9;
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.95) translateY(8px) rotate(-2deg) !important;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.08),
+        0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.journal-entry.behind-2 {
+    z-index: 8;
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.90) translateY(16px) rotate(-4deg) !important;
+    box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.05),
+        0 5px 15px rgba(0, 0, 0, 0.04);
+}
+
+.journal-entry.hidden {
+    z-index: 7;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.85) translateY(24px) rotate(-6deg) !important;
+    pointer-events: none;
+}
+
+/* Show all cards by default */
+.journal-entry {
+    display: block;
+}
+
+/* Navigation Buttons */
+.carousel-navigation {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 15;
+    padding: 0 -50px; /* Extend outside the carousel */
+}
+
+.carousel-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 229, 92, 0.4);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #5a67d8;
+    cursor: pointer;
+    pointer-events: auto;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+.carousel-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 229, 92, 0.8);
+    transform: scale(1.1);
+    box-shadow: 
+        0 12px 35px rgba(0, 0, 0, 0.15),
+        0 6px 15px rgba(0, 0, 0, 0.1);
+    color: #4c51bf;
+}
+
+.carousel-btn:active {
+    transform: scale(0.95);
+}
+
+.carousel-prev {
+    margin-left: -30px; /* Much closer - was -80px */
+}
+
+.carousel-next {
+    margin-right: -30px; /* Much closer - was -80px */
+}
+
+/* Journal Entry Text Styling */
+.journal-entry p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: #2C2C2C;
+    margin-bottom: 2rem;
+    font-style: italic;
+    position: relative;
+    z-index: 2;
+}
+
+.journal-entry .testimonial-author {
+    font-weight: 500;
+    color: #6B73FF;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 2;
+    opacity: 0.8;
+}
+
+/* Responsive adjustments for journal carousel */
+@media (max-width: 768px) {
+    .journal-carousel {
+        height: 380px;
+    }
+    
+    .journal-entry {
+        padding: 2.5rem 2rem;
+        width: 95%;
+    }
+    
+    .journal-entry p {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+    }
+    
+    .carousel-navigation {
+        padding: 0 -40px;
+    }
+    
+    .carousel-prev {
+        margin-left: -25px; /* Closer on tablet */
+    }
+    
+    .carousel-next {
+        margin-right: -25px; /* Closer on tablet */
+    }
+    
+    .carousel-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .journal-carousel {
+        height: 420px;
+    }
+    
+    .journal-entry {
+        padding: 2rem 1.5rem;
+        width: 98%;
+        border-radius: 16px;
+    }
+    
+    .journal-entry p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    
+    .journal-entry .testimonial-author {
+        font-size: 0.8rem;
+    }
+    
+    .carousel-prev {
+        margin-left: -20px; /* Even closer on mobile */
+    }
+    
+    .carousel-next {
+        margin-right: -20px; /* Even closer on mobile */
+    }
+    
+    .carousel-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* Carousel dots indicator */
+.carousel-dots {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 20;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(107, 115, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.dot.active {
+    background: #6B73FF;
+    transform: scale(1.3);
+    border-color: rgba(255, 229, 92, 0.6);
+    box-shadow: 0 0 12px rgba(107, 115, 255, 0.4);
+}
+
+.dot:hover {
+    background: rgba(107, 115, 255, 0.6);
+    transform: scale(1.1);
 }

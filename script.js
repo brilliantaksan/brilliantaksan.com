@@ -1,39 +1,35 @@
 // Enhanced Modal functionality and vibrant interactions
 document.addEventListener('DOMContentLoaded', function() {
-    // Custom Cursor
+        // Simple Custom Cursor
+    console.log('🌞 Creating simple cursor...');
+    
     const cursor = document.createElement('div');
     cursor.className = 'cursor';
     document.body.appendChild(cursor);
 
     let mouseX = 0;
     let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
 
+    // Update cursor position immediately
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
     });
-
-    // Smooth cursor animation with easing
-    function animateCursor() {
-        const ease = 0.15;
-        cursorX += (mouseX - cursorX) * ease;
-        cursorY += (mouseY - cursorY) * ease;
-        
-        cursor.style.left = cursorX + 'px';
-        cursor.style.top = cursorY + 'px';
-        
-        requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
 
     // Cursor grow effect on interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .magnetic-button, .tilt-card, .close');
+    const interactiveElements = document.querySelectorAll('a, button, .magnetic-button, .tilt-card, .close, .dot');
     interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+        el.addEventListener('mouseenter', () => {
+            cursor.classList.add('grow');
+        });
+        el.addEventListener('mouseleave', () => {
+            cursor.classList.remove('grow');
+        });
     });
+
+    console.log('✅ Cursor created and events added');
 
         // Morphing Background Text Rotation Component
     class MorphingTextRotate {
@@ -313,13 +309,428 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Emergency Simple Carousel - Just Make It Work
+    class EmergencyCarousel {
+        constructor(container) {
+            this.container = container;
+            this.currentIndex = 0;
+            this.intervalId = null;
+            
+            this.entries = Array.from(container.querySelectorAll('.journal-entry'));
+            this.dots = Array.from(container.querySelectorAll('.dot'));
+            
+            console.log('🚨 EMERGENCY: Found', this.entries.length, 'entries');
+            
+            if (this.entries.length === 0) {
+                console.error('❌ No entries found!');
+                return;
+            }
+            
+            this.forceVisible();
+            this.addNavigationArrows();
+            this.setupDotClicks();
+            this.startRotation();
+        }
+
+        forceVisible() {
+            console.log('🔧 FORCING CARDS VISIBLE...');
+            
+            // Hide all cards first
+            this.entries.forEach((entry, index) => {
+                entry.style.cssText = `
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    display: none !important;
+                    opacity: 0 !important;
+                    z-index: 1 !important;
+                `;
+            });
+            
+            // Show only the first card
+            if (this.entries[0]) {
+                this.entries[0].style.cssText = `
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    display: block !important;
+                    opacity: 1 !important;
+                    z-index: 10 !important;
+                `;
+                
+                console.log('✅ First card forced visible');
+            }
+            
+            this.updateDots();
+        }
+
+        showCard(index) {
+            console.log(`🎯 Showing card ${index}`);
+            
+            // Hide all cards
+            this.entries.forEach(entry => {
+                entry.style.display = 'none';
+                entry.style.opacity = '0';
+                entry.style.zIndex = '1';
+            });
+            
+            // Show target card
+            if (this.entries[index]) {
+                this.entries[index].style.display = 'block';
+                this.entries[index].style.opacity = '1';
+                this.entries[index].style.zIndex = '10';
+            }
+            
+            this.currentIndex = index;
+            this.updateDots();
+        }
+
+        updateDots() {
+            this.dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === this.currentIndex);
+            });
+        }
+
+        next() {
+            const nextIndex = (this.currentIndex + 1) % this.entries.length;
+            this.showCard(nextIndex);
+        }
+
+        previous() {
+            const prevIndex = (this.currentIndex - 1 + this.entries.length) % this.entries.length;
+            this.showCard(prevIndex);
+        }
+
+        goToCard(index) {
+            if (index !== this.currentIndex) {
+                this.showCard(index);
+                this.restartRotation();
+            }
+        }
+
+        addNavigationArrows() {
+            // Create navigation container
+            const navContainer = document.createElement('div');
+            navContainer.className = 'carousel-navigation';
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'carousel-btn carousel-prev';
+            prevBtn.innerHTML = '←';
+            prevBtn.setAttribute('aria-label', 'Previous card');
+            prevBtn.onclick = () => {
+                console.log('⬅️ Previous button clicked');
+                this.previous();
+                this.restartRotation();
+            };
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'carousel-btn carousel-next';
+            nextBtn.innerHTML = '→';
+            nextBtn.setAttribute('aria-label', 'Next card');
+            nextBtn.onclick = () => {
+                console.log('➡️ Next button clicked');
+                this.next();
+                this.restartRotation();
+            };
+            
+            navContainer.appendChild(prevBtn);
+            navContainer.appendChild(nextBtn);
+            this.container.appendChild(navContainer);
+            
+            // Add hover pause to prevent timing conflicts
+            this.container.addEventListener('mouseenter', () => {
+                this.stopRotation();
+            });
+            
+            this.container.addEventListener('mouseleave', () => {
+                this.startRotation();
+            });
+            
+            console.log('🎯 Navigation arrows added with hover pause');
+        }
+
+        setupDotClicks() {
+            this.dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    console.log(`🔘 Dot ${index} clicked`);
+                    this.goToCard(index);
+                });
+            });
+        }
+
+        startRotation() {
+            // Always clear any existing interval first
+            this.stopRotation();
+            
+            this.intervalId = setInterval(() => {
+                this.next();
+            }, 6000); // Consistent 6 seconds
+            console.log('🔄 Auto-rotation started (6 seconds)');
+        }
+
+        stopRotation() {
+            if (this.intervalId) {
+                clearInterval(this.intervalId);
+                this.intervalId = null;
+                console.log('⏹️ Auto-rotation stopped');
+            }
+        }
+
+        restartRotation() {
+            // Simplified: just stop and start again
+            this.stopRotation();
+            // Immediate restart instead of delay to avoid timing issues
+            this.startRotation();
+        }
+    }
+
+    // Simple Stacked Journal Carousel - Clean & Functional
+    class SimpleStackedCarousel {
+        constructor(container) {
+            this.container = container;
+            this.currentIndex = 0;
+            this.intervalId = null;
+            this.isTransitioning = false;
+            
+            console.log('🔍 Container found:', container);
+            
+            this.entries = Array.from(container.querySelectorAll('.journal-entry'));
+            this.dots = Array.from(container.querySelectorAll('.dot'));
+            
+            console.log('✅ Found', this.entries.length, 'journal entries');
+            console.log('✅ Found', this.dots.length, 'dots');
+            
+            // Debug: log each entry
+            this.entries.forEach((entry, index) => {
+                console.log(`📝 Entry ${index}:`, entry.textContent.substring(0, 50) + '...');
+                console.log(`📏 Entry ${index} current styles:`, {
+                    display: window.getComputedStyle(entry).display,
+                    opacity: window.getComputedStyle(entry).opacity,
+                    visibility: window.getComputedStyle(entry).visibility
+                });
+            });
+            
+            if (this.entries.length === 0) {
+                console.error('❌ No journal entries found!');
+                return;
+            }
+            
+            this.init();
+            this.setupEventListeners();
+        }
+
+        init() {
+            console.log('🔄 Initializing simple stacked carousel...');
+            console.log('📊 Found entries:', this.entries.length);
+            
+            // Force all cards to be visible first
+            this.entries.forEach((entry, index) => {
+                // Clear any existing styles and classes
+                entry.style.cssText = '';
+                entry.classList.remove('current', 'behind-1', 'behind-2', 'hidden');
+                
+                // Force display and basic positioning
+                entry.style.display = 'block';
+                entry.style.opacity = '1';
+                entry.style.position = 'absolute';
+                entry.style.top = '50%';
+                entry.style.left = '50%';
+                entry.style.transform = 'translate(-50%, -50%)';
+                entry.style.zIndex = '10';
+                
+                console.log(`📱 Card ${index} forced visible:`, entry.style.display, entry.style.opacity);
+            });
+            
+            // Small delay to ensure DOM updates
+            setTimeout(() => {
+                this.updateCardStacking();
+                this.updateDots();
+                this.createNavigationButtons();
+                this.startAutoRotation();
+                console.log('✅ Simple stacked carousel initialized with', this.entries.length, 'cards');
+            }, 100);
+        }
+
+        updateCardStacking() {
+            this.entries.forEach((entry, index) => {
+                // Clear all position classes
+                entry.classList.remove('current', 'behind-1', 'behind-2', 'hidden');
+                
+                const relativePosition = (index - this.currentIndex + this.entries.length) % this.entries.length;
+                
+                if (relativePosition === 0) {
+                    // Current card (front)
+                    entry.classList.add('current');
+                } else if (relativePosition === 1) {
+                    // First card behind
+                    entry.classList.add('behind-1');
+                } else if (relativePosition === 2) {
+                    // Second card behind
+                    entry.classList.add('behind-2');
+                } else {
+                    // Hidden cards
+                    entry.classList.add('hidden');
+                }
+            });
+        }
+
+        updateDots() {
+            this.dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === this.currentIndex);
+            });
+        }
+
+        moveToNext() {
+            if (this.isTransitioning) return;
+            
+            this.isTransitioning = true;
+            console.log(`➡️ Moving to next card from ${this.currentIndex}`);
+            
+            // Update current index
+            this.currentIndex = (this.currentIndex + 1) % this.entries.length;
+            
+            // Update stacking
+            this.updateCardStacking();
+            this.updateDots();
+            
+            // Wait for transition to complete
+            setTimeout(() => {
+                this.isTransitioning = false;
+            }, 400);
+        }
+
+        moveToPrevious() {
+            if (this.isTransitioning) return;
+            
+            this.isTransitioning = true;
+            console.log(`⬅️ Moving to previous card from ${this.currentIndex}`);
+            
+            // Update current index
+            this.currentIndex = (this.currentIndex - 1 + this.entries.length) % this.entries.length;
+            
+            // Update stacking
+            this.updateCardStacking();
+            this.updateDots();
+            
+            // Wait for transition to complete
+            setTimeout(() => {
+                this.isTransitioning = false;
+            }, 400);
+        }
+
+        goToIndex(targetIndex) {
+            if (this.isTransitioning || targetIndex === this.currentIndex) return;
+            
+            console.log(`🎯 Jumping to card ${targetIndex}`);
+            
+            this.isTransitioning = true;
+            this.currentIndex = targetIndex;
+            
+            // Update stacking
+            this.updateCardStacking();
+            this.updateDots();
+            
+            // Restart auto rotation
+            this.stopAutoRotation();
+            setTimeout(() => {
+                this.startAutoRotation();
+                this.isTransitioning = false;
+            }, 2000);
+        }
+
+        createNavigationButtons() {
+            // Create navigation container
+            const navContainer = document.createElement('div');
+            navContainer.className = 'carousel-navigation';
+            
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'carousel-btn carousel-prev';
+            prevBtn.innerHTML = '←';
+            prevBtn.onclick = () => {
+                this.stopAutoRotation();
+                this.moveToPrevious();
+                setTimeout(() => this.startAutoRotation(), 3000);
+            };
+            
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'carousel-btn carousel-next';
+            nextBtn.innerHTML = '→';
+            nextBtn.onclick = () => {
+                this.stopAutoRotation();
+                this.moveToNext();
+                setTimeout(() => this.startAutoRotation(), 3000);
+            };
+            
+            navContainer.appendChild(prevBtn);
+            navContainer.appendChild(nextBtn);
+            this.container.appendChild(navContainer);
+        }
+
+        setupEventListeners() {
+            // Dot clicks
+            this.dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    console.log(`🔘 Dot ${index} clicked`);
+                    this.goToIndex(index);
+                });
+            });
+
+            // Pause on hover
+            this.container.addEventListener('mouseenter', () => {
+                this.stopAutoRotation();
+            });
+
+            this.container.addEventListener('mouseleave', () => {
+                setTimeout(() => this.startAutoRotation(), 1000);
+            });
+        }
+
+        startAutoRotation() {
+            if (this.intervalId || this.entries.length <= 1) return;
+            
+            console.log('🚀 Starting auto rotation (4 seconds)');
+            this.intervalId = setInterval(() => {
+                if (!this.isTransitioning) {
+                    this.moveToNext();
+                }
+            }, 4000);
+        }
+
+        stopAutoRotation() {
+            if (this.intervalId) {
+                console.log('⏹️ Stopping auto rotation');
+                clearInterval(this.intervalId);
+                this.intervalId = null;
+            }
+        }
+    }
+
+    // Initialize components when DOM is ready
     // Initialize Morphing Text Rotation
     const rotatingContainer = document.querySelector('.rotating-container');
     if (rotatingContainer) {
-        new MorphingTextRotate(rotatingContainer, {
-            rotationInterval: 2200, // Every 2.2 seconds
+        const morphingText = new MorphingTextRotate(rotatingContainer, {
+            rotationInterval: 2400,
             auto: true
         });
+    }
+
+    // Initialize EMERGENCY Journal Carousel
+    const journalCarousel = document.querySelector('.journal-carousel');
+    if (journalCarousel) {
+        console.log('🚨 EMERGENCY: Initializing basic carousel...');
+        
+        const carousel = new EmergencyCarousel(journalCarousel);
+
+        console.log('✅ Emergency carousel initialized');
+    } else {
+        console.error('❌ Journal carousel container not found!');
     }
 
     // Initialize Sparkles for section titles
@@ -361,8 +772,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Tilt Card Effects (more subtle)
-    const tiltCards = document.querySelectorAll('.tilt-card');
+    // Tilt Card Effects (more subtle) - exclude journal entries
+    const tiltCards = document.querySelectorAll('.tilt-card:not(.journal-entry)');
     tiltCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transition = 'transform 0.2s ease-out';
@@ -613,5 +1024,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log('✨ Listening Table: Smooth interactions with rotating text and sparkles loaded!');
-}); 
 }); 
