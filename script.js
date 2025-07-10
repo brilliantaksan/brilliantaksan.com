@@ -944,8 +944,8 @@ document.addEventListener('DOMContentLoaded', function() {
     modalTriggers.forEach(trigger => {
         trigger.addEventListener('click', function(e) {
             e.preventDefault();
-            // Direct redirect to TidyCal link
-            window.open('https://tidycal.com/brilliantaksan/listen', '_blank');
+            // Direct redirect to Cal.com link
+            window.open('https://cal.com/brilliantaksan/listen', '_blank');
         });
     });
 
