@@ -279,7 +279,8 @@ body {
     animation: glow 2s ease-in-out infinite alternate;
     transition: border-radius 0.7s ease-in, width 0.7s ease-in, transform 0.7s ease-in;
     z-index: 11;
-    width: 5.2em; /* Initial width for HEARD with padding */
+    width: auto; /* Width will be set dynamically by JavaScript */
+    min-width: 4em; /* Minimum width to prevent collapse */
 }
 
 .word-content {
@@ -312,6 +313,12 @@ body {
     text-transform: uppercase;
 }
 
+/* Ensure the first word starts properly positioned */
+.shape-word:first-child {
+    transform: translate(-50%, -50%) translateY(0%);
+    opacity: 1;
+}
+
 .word-letter {
     opacity: 0;
     transform: translateY(20px);
@@ -325,8 +332,8 @@ body {
 }
 
 .shape-word.active {
-    transform: translate(-50%, -50%) translateY(0%);
-    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0%) !important;
+    opacity: 1 !important;
 }
 
 .shape-word.exiting {

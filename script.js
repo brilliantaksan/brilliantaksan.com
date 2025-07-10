@@ -45,28 +45,47 @@ document.addEventListener('DOMContentLoaded', function() {
             this.background = container.querySelector('.morphing-background');
             this.wordContent = container.querySelector('.word-content');
             
-            // Define morphing styles for each word with generous mobile-friendly padding
-            this.wordStyles = [
-                { width: '5.2em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // HEARD
-                { width: '4.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },  // SEEN
-                { width: '5.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' },   // VALUED
-                { width: '9.2em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // UNDERSTOOD
-                { width: '10.5em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }, // APPRECIATED
-                { width: '8.8em', borderRadius: '8px', bgTransform: 'rotate(0deg)', textTransform: 'rotate(0deg)' }   // EVERYTHING
-            ];
+            // Create temporary element to measure text widths accurately
+            this.measureElement = document.createElement('div');
+            this.measureElement.style.cssText = `
+                position: absolute;
+                visibility: hidden;
+                white-space: nowrap;
+                font-family: 'Inter', sans-serif;
+                font-weight: 800;
+                font-size: ${window.getComputedStyle(this.words[0]).fontSize};
+                letter-spacing: -0.02em;
+                text-transform: uppercase;
+            `;
+            document.body.appendChild(this.measureElement);
             
-            // Adjust for mobile screens
-            if (window.innerWidth <= 480) {
-                this.wordStyles = this.wordStyles.map(style => ({
-                    ...style,
-                    width: `${parseFloat(style.width) * 0.85}em` // 15% smaller for mobile
-                }));
-            } else if (window.innerWidth <= 768) {
-                this.wordStyles = this.wordStyles.map(style => ({
-                    ...style,
-                    width: `${parseFloat(style.width) * 0.92}em` // 8% smaller for tablet
-                }));
-            }
+            // Calculate dynamic widths for each word
+            this.wordStyles = this.words.map(word => {
+                this.measureElement.textContent = word.textContent;
+                const measuredWidth = this.measureElement.offsetWidth;
+                // Convert to em and add padding (1.6em base padding + responsive adjustment)
+                const fontSize = parseFloat(window.getComputedStyle(this.words[0]).fontSize);
+                let paddingFactor = 1.6;
+                
+                // Adjust padding based on screen size
+                if (window.innerWidth <= 480) {
+                    paddingFactor = 1.4;
+                } else if (window.innerWidth <= 768) {
+                    paddingFactor = 1.5;
+                }
+                
+                const widthInEm = (measuredWidth / fontSize) + paddingFactor;
+                
+                return {
+                    width: `${widthInEm.toFixed(1)}em`,
+                    borderRadius: '8px',
+                    bgTransform: 'rotate(0deg)',
+                    textTransform: 'rotate(0deg)'
+                };
+            });
+            
+            // Clean up measurement element
+            document.body.removeChild(this.measureElement);
             
             this.init();
         }
@@ -85,8 +104,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
             
-            // Set initial background style first
-            this.morphBackground(0);
+            // Ensure background is properly positioned and sized from the start
+            const initialStyle = this.wordStyles[0];
+            this.background.style.width = initialStyle.width;
+            this.background.style.borderRadius = initialStyle.borderRadius;
+            this.background.style.transform = `translate(-50%, -50%) ${initialStyle.bgTransform}`;
             
             // Set initial state
             this.words.forEach((word, index) => {
@@ -94,14 +116,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     word.classList.add('active');
                     // Apply initial text rotation
                     word.style.transform = `translate(-50%, -50%) ${this.wordStyles[0].textTransform}`;
-                    // Small delay to ensure positioning is set before letter animation
-                    setTimeout(() => {
+                    // Ensure immediate visibility and centering
+                    word.style.opacity = '1';
+                    
+                    // Start letter animation after a minimal delay to ensure DOM is ready
+                    requestAnimationFrame(() => {
                         this.animateLettersIn(word, 0);
-                    }, 50);
+                    });
                 } else {
                     word.classList.remove('active', 'exiting');
+                    word.style.opacity = '0';
                 }
             });
+            
+            // Update spacing for the initial word
+            this.updateSpacing(0);
             
             if (this.auto) {
                 this.start();
@@ -139,6 +168,13 @@ document.addEventListener('DOMContentLoaded', function() {
             this.background.style.borderRadius = style.borderRadius;
             this.background.style.transform = `translate(-50%, -50%) ${style.bgTransform}`;
             
+            // Update spacing
+            this.updateSpacing(index);
+        }
+
+        updateSpacing(index) {
+            const style = this.wordStyles[index];
+            
             // Only adjust spacing on mobile (≤768px), keep desktop fixed
             if (window.innerWidth <= 768) {
                 const toFeelElement = document.querySelector('.to-feel');
@@ -147,18 +183,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (toFeelElement && rotatingContainer) {
                     const baseWidth = parseFloat(style.width);
                     
-                    // Mobile-only adaptive spacing
+                    // Mobile-only adaptive spacing with better calculation
                     if (baseWidth >= 9.0) {
-                        rotatingContainer.style.minWidth = `${baseWidth + 2.0}em`;
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
                         toFeelElement.style.marginRight = '0.12em';
                     } else if (baseWidth >= 7.0) {
-                        rotatingContainer.style.minWidth = `${baseWidth + 1.8}em`;
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.3}em`;
                         toFeelElement.style.marginRight = '0.1em';
                     } else if (baseWidth >= 5.0) {
-                        rotatingContainer.style.minWidth = `${baseWidth + 1.5}em`;
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
                         toFeelElement.style.marginRight = '0.08em';
                     } else {
-                        rotatingContainer.style.minWidth = `${baseWidth + 1.2}em`;
+                        rotatingContainer.style.minWidth = `${baseWidth + 1.0}em`;
                         toFeelElement.style.marginRight = '0.06em';
                     }
                 }
@@ -185,16 +221,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Apply positioning immediately to prevent jitter
                     const style = this.wordStyles[nextIndex];
                     nextWord.style.transform = `translate(-50%, -50%) ${style.textTransform}`;
+                    nextWord.style.opacity = '1';
                     
                     // Then: Start letter animations after positioning is set
-                    setTimeout(() => {
+                    requestAnimationFrame(() => {
                         this.animateLettersIn(nextWord, 0);
-                    }, 50); // Small delay to ensure positioning is applied
+                    });
                 }, 150);
                 
                 // Clean up after animations complete
                 setTimeout(() => {
                     currentWord.classList.remove('exiting');
+                    currentWord.style.opacity = '0';
                     resolve();
                 }, 600);
             });
