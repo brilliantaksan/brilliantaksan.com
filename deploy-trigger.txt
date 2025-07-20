@@ -1,0 +1,4 @@
+Deploy trigger - Cal.com embed update
+Timestamp: $(date)
+Version: 2.0
+Changes: Replaced modal with inline Cal.com embed 
