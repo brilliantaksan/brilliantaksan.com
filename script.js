@@ -911,7 +911,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     // Observe sections for scroll animations
-    const animatedSections = document.querySelectorAll('.how-it-works, .why-section, .testimonials, .final-cta');
+    const animatedSections = document.querySelectorAll('.how-it-works, .why-section, .testimonials, .final-cta, .booking-section');
     animatedSections.forEach(section => {
         section.classList.add('scroll-animate');
         observer.observe(section);
@@ -935,65 +935,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Enhanced Modal with Smooth Animation
-    const modal = document.getElementById('booking');
-    const modalContent = document.querySelector('.modal-content');
-    const modalTriggers = document.querySelectorAll('a[href="#booking"]');
-    const closeBtn = document.querySelector('.close');
-
-    modalTriggers.forEach(trigger => {
+    // Smooth scroll to booking section
+    const bookingTriggers = document.querySelectorAll('a[href="#booking"]');
+    
+    bookingTriggers.forEach(trigger => {
         trigger.addEventListener('click', function(e) {
             e.preventDefault();
-            // Direct redirect to Cal.com link
-            window.open('https://cal.com/brilliantaksan/listen', '_blank');
+            const bookingSection = document.getElementById('booking');
+            if (bookingSection) {
+                bookingSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         });
     });
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) closeModal();
-    });
-
-    function openModal() {
-        modal.style.display = 'block';
-        modal.style.opacity = '0';
+    
+    // Handle Cal.com embed loading
+    const calEmbedWrapper = document.querySelector('.cal-embed-wrapper');
+    const calIframe = document.querySelector('.cal-embed-wrapper iframe');
+    
+    if (calEmbedWrapper && calIframe) {
+        // Show loading briefly
+        calEmbedWrapper.classList.add('loading');
         
-        // Animate in
-        requestAnimationFrame(() => {
-            modal.style.transition = 'opacity 0.3s ease';
-            modal.style.opacity = '1';
-            
-            modalContent.style.transform = 'scale(0.9) translateY(-20px)';
-            modalContent.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            
-            requestAnimationFrame(() => {
-                modalContent.style.transform = 'scale(1) translateY(0px)';
-            });
-        });
-
-        // Animate booking options with stagger
-        const bookingOptions = modal.querySelectorAll('.booking-option');
-        bookingOptions.forEach((option, index) => {
-            option.style.opacity = '0';
-            option.style.transform = 'translateY(20px)';
-            option.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.320, 1)';
-            
+        // Hide loading after iframe loads
+        calIframe.addEventListener('load', function() {
             setTimeout(() => {
-                option.style.opacity = '1';
-                option.style.transform = 'translateY(0px)';
-            }, 150 + index * 80);
+                calEmbedWrapper.classList.remove('loading');
+            }, 500); // Brief loading state
         });
-    }
-
-    function closeModal() {
-        modalContent.style.transition = 'transform 0.3s cubic-bezier(0.23, 1, 0.320, 1)';
-        modalContent.style.transform = 'scale(0.95) translateY(10px)';
-        modal.style.transition = 'opacity 0.3s ease';
-        modal.style.opacity = '0';
         
-        setTimeout(() => {
-            modal.style.display = 'none';
-        }, 300);
+        // Add a fallback link in case the embed doesn't work
+        const fallbackLink = document.createElement('div');
+        fallbackLink.innerHTML = `
+            <div style="text-align: center; margin-top: 1rem; padding: 1rem; background: rgba(255, 229, 92, 0.1); border-radius: 12px; border: 1px solid rgba(255, 229, 92, 0.3);">
+                <p style="margin-bottom: 1rem; color: #666;">If the booking form doesn't load, you can also book directly:</p>
+                <a href="https://cal.com/brilliantaksan" target="_blank" rel="noopener noreferrer" class="magnetic-button" style="display: inline-flex;">
+                    <span class="button-text">Open Booking Page</span>
+                    <div class="button-bg"></div>
+                </a>
+            </div>
+        `;
+        
+        // Insert fallback after the iframe
+        calEmbedWrapper.parentNode.insertBefore(fallbackLink, calEmbedWrapper.nextSibling);
     }
 
     // Ripple Effect Function
@@ -1022,10 +1008,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Enhanced Keyboard Navigation
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.style.display === 'block') {
-            closeModal();
-        }
-        
         // Regular smooth scroll with arrow keys
         if (e.key === 'ArrowDown') {
             e.preventDefault();

@@ -932,116 +932,55 @@ body {
     background: linear-gradient(135deg, #6B73FF 0%, #8B9DE8 100%);
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(46, 58, 135, 0.8);
-    backdrop-filter: blur(10px);
-    transition: opacity 0.3s ease;
-}
-
-.modal-content {
-    background: linear-gradient(135deg, #FFFFFF 0%, #F5F5F5 100%);
-    margin: 2% auto;
-    padding: 3rem;
-    border-radius: 25px;
-    width: 90%;
-    max-width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+/* Booking Section Styles */
+.booking-section {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
     position: relative;
-    border: 3px solid rgba(255, 229, 92, 0.6);
-    transform: scale(0.9);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
 }
 
-/* Custom scrollbar for modal content */
-.modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: rgba(245, 245, 245, 0.5);
-    border-radius: 20px;
-    margin: 20px 0; /* Add margin to match modal padding */
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, #FFE55C, #FF9500);
-    border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, #FFF200, #FFE55C);
-}
-
-.close {
-    color: #6B73FF;
-    float: right;
-    font-size: 2.5rem;
-    font-weight: bold;
-    cursor: pointer;
+.booking-section::before {
+    content: '';
     position: absolute;
-    top: 1rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.3s ease;
-    background: rgba(255, 229, 92, 0.2);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 229, 92, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 242, 0, 0.1) 0%, transparent 50%);
+    pointer-events: none;
 }
 
-.close:hover {
-    background: #FFE55C;
-    color: #2C2C2C;
-    transform: rotate(90deg) scale(1.1);
-}
-
-.modal-content h2 {
-    color: #2E3A87;
-    margin-bottom: 1.5rem;
-    font-size: 2.5rem;
-    text-align: center;
-    font-weight: 800;
-    text-transform: uppercase;
-}
-
-.modal-content p {
-    color: #2C2C2C;
-    margin-bottom: 3rem;
-    text-align: center;
+.booking-intro {
     font-size: 1.2rem;
-    font-weight: 500;
+    color: #666;
+    margin-bottom: 2rem;
+    text-align: center;
+    line-height: 1.6;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .booking-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
 }
 
 .booking-option {
     background: linear-gradient(135deg, #FFFFFF 0%, #F0E6D2 100%);
-    padding: 2rem;
-    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
     text-align: center;
     transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
-    cursor: pointer;
     border: 2px solid rgba(107, 115, 255, 0.2);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 .booking-decoration {
@@ -1067,8 +1006,8 @@ body {
 
 .booking-option h3 {
     color: #2E3A87;
-    margin-bottom: 0.8rem;
-    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
     font-weight: 700;
     text-transform: uppercase;
     font-family: 'Inter', sans-serif;
@@ -1078,8 +1017,90 @@ body {
     color: #2C2C2C;
     font-size: 1rem;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
     text-align: center;
+}
+
+.cal-embed-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+    border-radius: 24px;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    border: 2px solid rgba(255, 229, 92, 0.3);
+    position: relative;
+}
+
+.cal-embed-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(45deg, #FFE55C, #FFF200);
+    z-index: 2;
+}
+
+.cal-embed-wrapper {
+    position: relative;
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.cal-embed-wrapper iframe {
+    border: none;
+    border-radius: 24px;
+    background: #FFFFFF;
+    filter: brightness(1.02) contrast(1.05);
+}
+
+/* Custom styling for Cal.com embed to match website theme */
+.cal-embed-wrapper iframe {
+    /* Ensure the embed uses light theme */
+    background: #FFFFFF !important;
+}
+
+/* Add a subtle glow effect to match the website's aesthetic */
+.cal-embed-container:hover {
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 12px 24px rgba(0, 0, 0, 0.08),
+        0 0 0 1px rgba(255, 229, 92, 0.4);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Loading state for Cal.com embed - only show briefly */
+.cal-embed-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 229, 92, 0.3);
+    border-top: 3px solid #FFE55C;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cal-embed-wrapper.loading::before {
+    opacity: 1;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* Responsive Design */
@@ -1094,15 +1115,10 @@ body {
     .steps-container { grid-template-columns: 1fr; gap: 2rem; }
     .testimonials-grid { grid-template-columns: 1fr; }
     .booking-options { grid-template-columns: 1fr; }
-    .modal-content { margin: 5% auto; padding: 2rem; width: 95%; max-height: 85vh; }
-    
-    .modal-content::-webkit-scrollbar {
-        width: 6px; /* Thinner scrollbar on mobile */
-    }
-    
-    .modal-content::-webkit-scrollbar-track {
-        margin: 15px 0; /* Adjust margin for smaller padding */
-    }
+    .booking-section { padding: 3rem 0; }
+    .cal-embed-container { margin: 0 1rem; }
+    .cal-embed-wrapper iframe { height: 550px; }
+    .booking-options { margin-bottom: 2rem; }
     .story-content { padding: 2rem; }
     
     .step {
@@ -1203,6 +1219,13 @@ body {
     .hero-title .to-feel {
         margin-right: 0.04em;
     }
+    
+    .booking-section { padding: 2.5rem 0; }
+    .cal-embed-container { margin: 0 0.5rem; }
+    .cal-embed-wrapper iframe { height: 500px; }
+    .booking-options { gap: 1.5rem; margin-bottom: 2rem; }
+    .booking-option { padding: 2rem 1.5rem; }
+    .booking-intro { margin-bottom: 1.5rem; }
 }
 
 /* Smooth Scroll with Inertia */

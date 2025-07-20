@@ -1,0 +1,29 @@
+{
+  "name": "brill-listens-website",
+  "version": "1.0.0",
+  "description": "Brill Listens - Free listening sessions website",
+  "main": "index.html",
+  "scripts": {
+    "preview": "node generate-preview.js",
+    "serve": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000",
+    "start": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "listening",
+    "therapy",
+    "free",
+    "support",
+    "mental-health",
+    "tokyo"
+  ],
+  "author": "Brilliant Aksan",
+  "license": "MIT",
+  "devDependencies": {
+    "puppeteer": "^21.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brilliantaksan/listening-table.git"
+  }
+} 
