@@ -35,12 +35,12 @@ Design tokens source:
 Admin + CMS:
 - Login page: `/admin`
 - Protected studio: `/admin/studio`
-- Decap config: `public/admin/config.yml`
-- OAuth callback route: `src/app/api/auth/route.ts`
+- Studio editor source: `src/components/admin/content-editor.tsx`
+- Content API: `src/app/api/admin/content/route.ts`
 
 Media storage:
-- Upload media in `/admin/studio` via Supabase Storage uploader
-- Paste generated public URLs into CMS fields
+- Upload media inline in each field from `/admin/studio`
+- URLs are inserted directly into the corresponding profile/project fields
 
 ## Vercel deploy
 
@@ -61,12 +61,22 @@ Required:
 7. `GITHUB_OAUTH_CLIENT_SECRET`
 8. `CMS_OAUTH_ORIGIN`
 
+Optional (recommended in production so saves persist):
+1. `GITHUB_CONTENT_TOKEN`
+2. `GITHUB_REPO`
+3. `GITHUB_BRANCH`
+
 ## Supabase setup
 
 1. Create at least one auth user (email/password) for admin login.
 2. Add that email to `ADMIN_EMAILS`.
 3. Create a public Storage bucket (default name: `media`).
 4. Set `NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET` if you use a different bucket name.
+
+## Admin save behavior
+
+1. If `GITHUB_CONTENT_TOKEN` is set, saving in `/admin/studio` updates `content/site.json` in GitHub.
+2. If `GITHUB_CONTENT_TOKEN` is not set, saving updates local `content/site.json` (local development only).
 
 ## GitHub OAuth setup for Decap
 

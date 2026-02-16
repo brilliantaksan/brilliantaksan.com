@@ -1,7 +1,6 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { getSupabaseBrowserClient } from '@/lib/supabase-browser';
 
 function normalizeNextPath(value: string | null) {
@@ -11,7 +10,6 @@ function normalizeNextPath(value: string | null) {
 }
 
 export function AdminLoginForm({ initialNextPath }: { initialNextPath: string | null }) {
-  const router = useRouter();
   const nextPath = useMemo(() => normalizeNextPath(initialNextPath), [initialNextPath]);
 
   const [email, setEmail] = useState('');
@@ -29,8 +27,7 @@ export function AdminLoginForm({ initialNextPath }: { initialNextPath: string | 
         if (!response.ok) return;
         const data = (await response.json()) as { authenticated?: boolean };
         if (isMounted && data.authenticated) {
-          router.replace('/admin/studio');
-          router.refresh();
+          window.location.assign('/admin/studio');
         }
       } finally {
         if (isMounted) setCheckingSession(false);
@@ -42,7 +39,7 @@ export function AdminLoginForm({ initialNextPath }: { initialNextPath: string | 
     return () => {
       isMounted = false;
     };
-  }, [router]);
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,8 +70,7 @@ export function AdminLoginForm({ initialNextPath }: { initialNextPath: string | 
         throw new Error(payload.error || 'Admin session setup failed.');
       }
 
-      router.replace(nextPath);
-      router.refresh();
+      window.location.assign(nextPath);
     } catch (loginError) {
       const message = loginError instanceof Error ? loginError.message : 'Login failed.';
       setError(message);

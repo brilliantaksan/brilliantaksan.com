@@ -5,7 +5,7 @@
     "title": "Brilliant Aksan | CS Student, Videographer, Creative",
     "description": "Portfolio of Brilliant Aksan: computer science student, videographer, and creative. Book a free listening session and explore projects, films, and visual stories.",
     "url": "https://brilliantaksan.com",
-    "avatarUrl": "/favicon.png",
+    "avatarUrl": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/profile/1771264046801-screenshot-2026-02-17-at-2.47.18-am.png",
     "location": "TOKYO, JAPAN",
     "email": "hello@brilliantaksan.com",
     "seoImage": "/favicon.png"
@@ -13,29 +13,23 @@
   "hero": {
     "headline": "Hi, I'm Brilliant 👋",
     "subheadline": "(yes, it really is my name)",
-    "intro": "I study computer science at Waseda. I also make videos, build meaningful things, and host free listening sessions.",
+    "intro": "I study computer science at Waseda. I also make videos, build things, and host free listening sessions.",
     "primaryCtaLabel": "Book a Listening Session",
     "secondaryCtaLabel": "See What I'm Working On"
   },
   "about": [
-    "When I was a kid and people asked my dream job, I'd say \"inventor.\" Not because I understood it - I just liked the idea of making something new. I still kind of feel that way.",
-    "Right now that looks like:",
-    "- building web apps",
-    "- experimenting with startup ideas",
-    "- filming stories",
-    "- sitting with people who need someone to listen",
-    "This site is just a collection of what I've been building."
+    "When I was a kid and people asked my dream job, I'd say \"inventor.\" Not because I understood it - I just liked the idea of making something new. I still kind of feel that way.\nRight now that looks like:\n- building web apps\n- experimenting with startup ideas\n- filming stories\n- sitting with people who need someone to listen"
   ],
   "work": [
     {
       "company": "Japan's Venture Academy (JVA)",
-      "href": "",
+      "href": "https://www.japansventureacademy.com",
       "title": "Fellow ",
       "location": "Tokyo",
       "start": "2025",
       "end": "Present",
       "description": "I joined because I was curious about startups and tired of just watching from the outside. Through the fellowship, I worked on building a student marketplace and spent a lot of time actually shipping instead of just talking. I also helped with content and storytelling, which felt natural because I've always liked documenting things. JVA made building feel less intimidating and more playful, and that mattered to me.",
-      "logo": "/favicon.png",
+      "logo": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/work/1771263959333-tcs269v0.jpg",
       "badges": [
         "Startups",
         "Shipping",
@@ -50,7 +44,7 @@
       "start": "2024",
       "end": "2025",
       "description": "I helped grow the page to 100k+ followers. I shot, directed, and edited many videos, including the first one that passed 2M views. It was chaotic and fun. I learned how to lead small creative teams, finish things under pressure, and care about pacing and energy. It was also where I realized I didn't just want to tell founder stories, I wanted to build things myself.",
-      "logo": "/favicon.png",
+      "logo": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/work/1771263983616-channels4_profile.jpg",
       "badges": [
         "100k+ Growth",
         "2M+ Views",
@@ -65,7 +59,7 @@
       "degree": "Computer Science & Communications Engineering. I study CS because I want technical depth, and I stay close to creative work because I enjoy it. I don't overthink the combination.",
       "start": "2023",
       "end": "2027",
-      "logo": "/favicon.png"
+      "logo": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/education/1771264102969-waseda_university_logo.svg"
     }
   ],
   "skills": [
@@ -131,9 +125,9 @@
   },
   "projects": [
     {
-      "title": "TalentMap (Utoe)",
-      "href": "",
-      "dates": "2025 - Present",
+      "title": "TalentMap",
+      "href": "https://utoe-amber.vercel.app",
+      "dates": "2025 ",
       "description": "I didn't like how hiring felt like scrolling PDFs, so I built a visual map instead. TalentMap lets recruiters explore student profiles on an interactive map with clustered nodes, zoom, and hover previews - more like discovering people than scanning resumes. It has a profile builder with GitHub import, a recruiter dashboard, saved candidates, filters + export, and auth + database. It's one of the first projects where I felt like, \"oh... I can actually build real things.\"",
       "technologies": [
         "Next.js",
@@ -143,21 +137,32 @@
         "Clerk",
         "Supabase"
       ],
-      "image": "",
+      "image": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/projects/1771263851580-screenshot-2026-02-17-at-2.43.32-am.png",
       "video": "",
-      "links": []
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/brilliantaksan/Utoe"
+        }
+      ]
     },
     {
       "title": "Minama.jp",
-      "href": "https://github.com/MinamaCo/minama-web",
-      "dates": "2024 - Present",
+      "href": "https://minama.jp",
+      "dates": "2025",
       "description": "A campus-only marketplace for buying, selling, and trading textbooks, furniture, and electronics within your university. No random strangers and less waste. I worked on this through JVA and led development. It's simple, but I like simple things that people actually use.",
       "technologies": [
-        "Marketplace",
-        "Web App",
-        "Campus Community"
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Supabase",
+        "Clerk",
+        "Stripe",
+        "Tailwind",
+        "CSS",
+        "Vercel"
       ],
-      "image": "",
+      "image": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/projects/1771263848943-screenshot-2026-02-17-at-2.43.56-am.png",
       "video": "",
       "links": [
         {

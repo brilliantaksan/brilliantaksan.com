@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_SESSION_COOKIE_NAME, verifyAdminSessionToken } from '@/lib/admin-session';
+import { ADMIN_SESSION_COOKIE_NAME } from '@/lib/admin-session';
 
 function isAdminRoot(pathname: string) {
   return pathname === '/admin' || pathname === '/admin/';
@@ -12,11 +12,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value;
-  const session = token ? await verifyAdminSessionToken(token) : null;
+  const hasSessionCookie = Boolean(request.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value);
 
   if (isAdminRoot(pathname)) {
-    if (!session) {
+    if (!hasSessionCookie) {
       return NextResponse.next();
     }
 
@@ -26,7 +25,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (session) {
+  if (hasSessionCookie) {
     return NextResponse.next();
   }
 

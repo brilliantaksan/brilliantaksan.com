@@ -5,6 +5,8 @@ backend:
   base_url: https://brilliantaksan.com
   auth_endpoint: api/auth
 
+media_folder: "public/uploads"
+public_folder: "/uploads"
 publish_mode: editorial_workflow
 
 collections:
