@@ -1,0 +1,152 @@
+backend:
+  name: github
+  repo: brilliantaksan/brilliantaksan.com
+  branch: main
+  base_url: https://brilliantaksan.com
+  auth_endpoint: api/auth
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "site"
+    label: "Site Content"
+    files:
+      - label: "Homepage"
+        name: "homepage"
+        file: "content/site.json"
+        format: "json"
+        editor:
+          preview: false
+        fields:
+          - label: "Meta"
+            name: "meta"
+            widget: "object"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Initials", name: "initials", widget: "string" }
+              - { label: "Page Title", name: "title", widget: "string" }
+              - { label: "SEO Description", name: "description", widget: "text" }
+              - { label: "Site URL", name: "url", widget: "string" }
+              - { label: "Avatar Image URL", name: "avatarUrl", widget: "string" }
+              - { label: "Location", name: "location", widget: "string" }
+              - { label: "Email", name: "email", widget: "string" }
+              - { label: "SEO Image URL", name: "seoImage", widget: "string" }
+
+          - label: "Hero"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Headline", name: "headline", widget: "string" }
+              - { label: "Subheadline", name: "subheadline", widget: "text" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Primary CTA Label", name: "primaryCtaLabel", widget: "string" }
+              - { label: "Secondary CTA Label", name: "secondaryCtaLabel", widget: "string" }
+
+          - label: "About Paragraphs"
+            name: "about"
+            widget: "list"
+            field: { label: "Paragraph", name: "paragraph", widget: "text" }
+
+          - label: "Work Experience"
+            name: "work"
+            widget: "list"
+            fields:
+              - { label: "Company", name: "company", widget: "string" }
+              - { label: "Company URL", name: "href", widget: "string", required: false }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Location", name: "location", widget: "string", required: false }
+              - { label: "Start", name: "start", widget: "string" }
+              - { label: "End", name: "end", widget: "string", required: false }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Logo URL", name: "logo", widget: "string", required: false }
+              - label: "Badges"
+                name: "badges"
+                widget: "list"
+                required: false
+                field: { label: "Badge", name: "badge", widget: "string" }
+
+          - label: "Education"
+            name: "education"
+            widget: "list"
+            fields:
+              - { label: "School", name: "school", widget: "string" }
+              - { label: "School URL", name: "href", widget: "string", required: false }
+              - { label: "Degree", name: "degree", widget: "string" }
+              - { label: "Start", name: "start", widget: "string" }
+              - { label: "End", name: "end", widget: "string", required: false }
+              - { label: "Logo URL", name: "logo", widget: "string", required: false }
+
+          - label: "Skills"
+            name: "skills"
+            widget: "list"
+            field: { label: "Skill", name: "skill", widget: "string" }
+
+          - label: "Social Links"
+            name: "socials"
+            widget: "list"
+            fields:
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "URL", name: "url", widget: "string" }
+              - label: "Icon"
+                name: "icon"
+                widget: "select"
+                options: ["instagram", "github", "linkedin", "youtube", "mail", "globe"]
+
+          - label: "Booking Section"
+            name: "booking"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Intro", name: "intro", widget: "text" }
+              - { label: "Cal Embed URL", name: "embedUrl", widget: "string" }
+              - label: "Booking Options"
+                name: "options"
+                widget: "list"
+                fields:
+                  - { label: "Emoji", name: "emoji", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+
+          - label: "Projects"
+            name: "projects"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Project URL", name: "href", widget: "string", required: false }
+              - { label: "Dates", name: "dates", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+              - label: "Technologies"
+                name: "technologies"
+                widget: "list"
+                field: { label: "Technology", name: "technology", widget: "string" }
+              - { label: "Image URL", name: "image", widget: "string", required: false }
+              - { label: "Video URL", name: "video", widget: "string", required: false }
+              - label: "Links"
+                name: "links"
+                widget: "list"
+                required: false
+                fields:
+                  - { label: "Type", name: "type", widget: "string" }
+                  - { label: "URL", name: "href", widget: "string" }
+
+          - label: "Creative Portfolio"
+            name: "creative"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - label: "Type"
+                name: "type"
+                widget: "select"
+                options: ["video", "photo"]
+              - { label: "Caption", name: "caption", widget: "text" }
+              - { label: "Client", name: "client", widget: "string" }
+              - { label: "Year", name: "year", widget: "string" }
+              - { label: "Image URL", name: "image", widget: "string", required: false }
+              - { label: "Video URL", name: "video", widget: "string", required: false }
+
+          - label: "Contact"
+            name: "contact"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Body", name: "body", widget: "text" }

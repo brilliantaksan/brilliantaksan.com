@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "name": "Brilliant Aksan",
+    "initials": "BA",
+    "title": "Brilliant Aksan | CS Student, Videographer, Creative",
+    "description": "Portfolio of Brilliant Aksan: computer science student, videographer, and creative. Book a free listening session and explore projects, films, and visual stories.",
+    "url": "https://brilliantaksan.com",
+    "avatarUrl": "/favicon.png",
+    "location": "TOKYO, JAPAN",
+    "email": "hello@brilliantaksan.com",
+    "seoImage": "/favicon.png"
+  },
+  "hero": {
+    "headline": "Hi, I'm Brilliant 👋",
+    "subheadline": "(yes, it really is my name)",
+    "intro": "I study computer science at Waseda. I also make videos, build meaningful things, and host free listening sessions.",
+    "primaryCtaLabel": "Book a Listening Session",
+    "secondaryCtaLabel": "See What I'm Working On"
+  },
+  "about": [
+    "When I was a kid and people asked my dream job, I'd say \"inventor.\" Not because I understood it - I just liked the idea of making something new. I still kind of feel that way.",
+    "Right now that looks like:",
+    "- building web apps",
+    "- experimenting with startup ideas",
+    "- filming stories",
+    "- sitting with people who need someone to listen",
+    "This site is just a collection of what I've been building."
+  ],
+  "work": [
+    {
+      "company": "Japan's Venture Academy (JVA)",
+      "href": "",
+      "title": "Fellow ",
+      "location": "Tokyo",
+      "start": "2025",
+      "end": "Present",
+      "description": "I joined because I was curious about startups and tired of just watching from the outside. Through the fellowship, I worked on building a student marketplace and spent a lot of time actually shipping instead of just talking. I also helped with content and storytelling, which felt natural because I've always liked documenting things. JVA made building feel less intimidating and more playful, and that mattered to me.",
+      "logo": "/favicon.png",
+      "badges": [
+        "Startups",
+        "Shipping",
+        "Storytelling"
+      ]
+    },
+    {
+      "company": "Tokyo Misfits",
+      "href": "",
+      "title": "Creative",
+      "location": "Tokyo",
+      "start": "2024",
+      "end": "2025",
+      "description": "I helped grow the page to 100k+ followers. I shot, directed, and edited many videos, including the first one that passed 2M views. It was chaotic and fun. I learned how to lead small creative teams, finish things under pressure, and care about pacing and energy. It was also where I realized I didn't just want to tell founder stories, I wanted to build things myself.",
+      "logo": "/favicon.png",
+      "badges": [
+        "100k+ Growth",
+        "2M+ Views",
+        "Creative Direction"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "Waseda University",
+      "href": "",
+      "degree": "Computer Science & Communications Engineering. I study CS because I want technical depth, and I stay close to creative work because I enjoy it. I don't overthink the combination.",
+      "start": "2023",
+      "end": "2027",
+      "logo": "/favicon.png"
+    }
+  ],
+  "skills": [
+    "Next.js",
+    "TypeScript",
+    "TailwindCSS",
+    "Shadcn/UI",
+    "Node.js",
+    "PostgreSQL",
+    "Figma",
+    "Cinematography",
+    "Color Grading",
+    "Motion Editing"
+  ],
+  "socials": [
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/brilliantaksan",
+      "icon": "instagram"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/brilliantaksan",
+      "icon": "github"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://linkedin.com/in/brilliantaksan",
+      "icon": "linkedin"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/@brilliantaksan",
+      "icon": "youtube"
+    }
+  ],
+  "booking": {
+    "title": "Listening Sessions",
+    "intro": "This started from loneliness. Nothing dramatic, just noticing that most conversations are advice, not listening. So I made a small booking page and started offering free time. No coaching. No fixing. Just presence. I've probably set aside around 80 hours over the last few years just to listen. It's one of the more meaningful things I do.",
+    "embedUrl": "https://cal.com/brilliantaksan?embed=true&theme=light&color=FFE55C&cache-buster=2",
+    "options": [
+      {
+        "emoji": "📞",
+        "title": "Video Call",
+        "description": "Talk from wherever feels safe for you."
+      },
+      {
+        "emoji": "☕",
+        "title": "Coffee",
+        "description": "Meet in person and talk in a calm setting."
+      },
+      {
+        "emoji": "🚶",
+        "title": "Walk",
+        "description": "Walk and reflect together through quiet streets or parks."
+      },
+      {
+        "emoji": "🍽",
+        "title": "Dinner",
+        "description": "Share a meal and have a deeper conversation."
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "TalentMap (Utoe)",
+      "href": "",
+      "dates": "2025 - Present",
+      "description": "I didn't like how hiring felt like scrolling PDFs, so I built a visual map instead. TalentMap lets recruiters explore student profiles on an interactive map with clustered nodes, zoom, and hover previews - more like discovering people than scanning resumes. It has a profile builder with GitHub import, a recruiter dashboard, saved candidates, filters + export, and auth + database. It's one of the first projects where I felt like, \"oh... I can actually build real things.\"",
+      "technologies": [
+        "Next.js",
+        "React",
+        "D3",
+        "Tailwind",
+        "Clerk",
+        "Supabase"
+      ],
+      "image": "",
+      "video": "",
+      "links": []
+    },
+    {
+      "title": "Minama.jp",
+      "href": "https://github.com/MinamaCo/minama-web",
+      "dates": "2024 - Present",
+      "description": "A campus-only marketplace for buying, selling, and trading textbooks, furniture, and electronics within your university. No random strangers and less waste. I worked on this through JVA and led development. It's simple, but I like simple things that people actually use.",
+      "technologies": [
+        "Marketplace",
+        "Web App",
+        "Campus Community"
+      ],
+      "image": "",
+      "video": "",
+      "links": [
+        {
+          "type": "GitHub",
+          "href": "https://github.com/MinamaCo/minama-web"
+        }
+      ]
+    }
+  ],
+  "creative": [
+    {
+      "title": "City Lights Portrait Reel",
+      "type": "video",
+      "caption": "Night portrait sequence with handheld motion and warm color grade.",
+      "client": "Personal Project",
+      "year": "2025",
+      "image": "",
+      "video": "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4"
+    },
+    {
+      "title": "Morning Studio Editorial",
+      "type": "photo",
+      "caption": "Editorial still set with soft directional light.",
+      "client": "Creator Collab",
+      "year": "2025",
+      "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
+      "video": ""
+    },
+    {
+      "title": "Street Motion Frames",
+      "type": "photo",
+      "caption": "Fast shutter street series for a youth fashion concept.",
+      "client": "Spec Campaign",
+      "year": "2024",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      "video": ""
+    }
+  ],
+  "contact": {
+    "title": "Let's Build Something Real",
+    "body": "If you're building a product, telling a story, exploring an idea, or you simply need someone to listen - reach out."
+  }
+}

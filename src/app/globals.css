@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 38% 98%;
+    --foreground: 215 24% 14%;
+    --card: 44 43% 99%;
+    --card-foreground: 215 24% 14%;
+    --popover: 44 43% 99%;
+    --popover-foreground: 215 24% 14%;
+    --primary: 44 95% 55%;
+    --primary-foreground: 215 28% 11%;
+    --secondary: 37 57% 93%;
+    --secondary-foreground: 215 24% 14%;
+    --muted: 37 44% 93%;
+    --muted-foreground: 215 13% 37%;
+    --accent: 192 52% 88%;
+    --accent-foreground: 205 32% 20%;
+    --destructive: 0 70% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 36 29% 84%;
+    --input: 36 29% 84%;
+    --ring: 44 95% 55%;
+    --radius: 0.95rem;
+    --brand-gold: 44 95% 55%;
+    --brand-ocean: 194 89% 40%;
+  }
+
+  .dark {
+    --background: 220 22% 8%;
+    --foreground: 42 40% 96%;
+    --card: 220 23% 11%;
+    --card-foreground: 42 40% 96%;
+    --popover: 220 23% 11%;
+    --popover-foreground: 42 40% 96%;
+    --primary: 44 98% 60%;
+    --primary-foreground: 220 22% 9%;
+    --secondary: 219 20% 17%;
+    --secondary-foreground: 42 35% 94%;
+    --muted: 219 18% 16%;
+    --muted-foreground: 40 14% 70%;
+    --accent: 210 29% 20%;
+    --accent-foreground: 42 35% 94%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 13% 22%;
+    --input: 220 13% 22%;
+    --ring: 44 98% 60%;
+    --brand-gold: 44 98% 60%;
+    --brand-ocean: 194 84% 52%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body), 'Manrope', sans-serif;
+    background-image: radial-gradient(circle at 50% -15%, hsl(var(--brand-gold) / 0.08), transparent 40%);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-body), 'Manrope', sans-serif;
+  }
+}

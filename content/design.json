@@ -1,0 +1,74 @@
+{
+  "layout": {
+    "maxWidthPx": 780,
+    "sectionGapPx": 66
+  },
+  "spacing": {
+    "heroStackPx": 22,
+    "sectionStackPx": 18
+  },
+  "typography": {
+    "globalScale": 0.9,
+    "globalLineHeight": 0.9,
+    "location": {
+      "size": "0.86rem",
+      "scale": 1,
+      "lineHeight": 1.0,
+      "letterSpacing": "0.16em"
+    },
+    "heroTitle": {
+      "size": "clamp(3rem, 8vw, 5.2rem)",
+      "scale": 0.8,
+      "lineHeight": 0.94,
+      "letterSpacing": "-0.04em"
+    },
+    "heroLead": {
+      "size": "clamp(1.7rem, 3.4vw, 2.2rem)",
+      "scale": 0.8,
+      "lineHeight": 1.28,
+      "letterSpacing": "-0.02em"
+    },
+    "body": {
+      "size": "1.2rem",
+      "scale": 1,
+      "lineHeight": 1.72,
+      "letterSpacing": "-0.002em"
+    },
+    "sectionTitle": {
+      "size": "clamp(2rem, 3.6vw, 2.55rem)",
+      "scale": 1,
+      "lineHeight": 1.06,
+      "letterSpacing": "-0.03em"
+    },
+    "showcaseTitle": {
+      "size": "clamp(2.6rem, 5vw, 4.25rem)",
+      "scale": 1,
+      "lineHeight": 1,
+      "letterSpacing": "-0.04em"
+    },
+    "showcaseBody": {
+      "size": "clamp(1.15rem, 1.9vw, 1.55rem)",
+      "scale": 1,
+      "lineHeight": 1.52,
+      "letterSpacing": "-0.01em"
+    },
+    "cardTitle": {
+      "size": "1.2rem",
+      "scale": 1,
+      "lineHeight": 1.3,
+      "letterSpacing": "-0.015em"
+    },
+    "meta": {
+      "size": "1.1rem",
+      "scale": 1,
+      "lineHeight": 1.8,
+      "letterSpacing": "0em"
+    },
+    "pill": {
+      "size": "0.78rem",
+      "scale": 1,
+      "lineHeight": 1.2,
+      "letterSpacing": "0.04em"
+    }
+  }
+}
