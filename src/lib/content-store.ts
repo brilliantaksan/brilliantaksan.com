@@ -129,13 +129,18 @@ export async function readSiteContent(): Promise<SiteContent> {
     return JSON.parse(rawJson) as SiteContent;
   }
 
-  if (await isLocalContentWritable()) {
+  const localWritable = await isLocalContentWritable();
+  if (localWritable) {
     return readSiteContentFromFile();
   }
 
-  const supabaseContent = await readSiteContentFromSupabase();
-  if (supabaseContent) {
-    return supabaseContent;
+  try {
+    const supabaseContent = await readSiteContentFromSupabase();
+    if (supabaseContent) {
+      return supabaseContent;
+    }
+  } catch (error) {
+    console.error('Supabase content read failed. Falling back to local content file.', error);
   }
 
   return readSiteContentFromFile();
