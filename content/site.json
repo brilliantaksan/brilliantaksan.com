@@ -38,7 +38,7 @@
     },
     {
       "company": "Tokyo Misfits",
-      "href": "",
+      "href": "https://tokyomisfits.com",
       "title": "Creative",
       "location": "Tokyo",
       "start": "2024",
@@ -47,8 +47,9 @@
       "logo": "https://fpwekbscohoszreqvmyf.supabase.co/storage/v1/object/public/media/work/1771263983616-channels4_profile.jpg",
       "badges": [
         "100k+ Growth",
-        "2M+ Views",
-        "Creative Direction"
+        "8M+ Views",
+        "Videographer",
+        "Editor"
       ]
     }
   ],
@@ -69,10 +70,10 @@
     "Shadcn/UI",
     "Node.js",
     "PostgreSQL",
-    "Figma",
-    "Cinematography",
-    "Color Grading",
-    "Motion Editing"
+    "Graphic Design",
+    "Videography",
+    "Editing",
+    "Color Grading"
   ],
   "socials": [
     {
@@ -89,11 +90,6 @@
       "name": "LinkedIn",
       "url": "https://linkedin.com/in/brilliantaksan",
       "icon": "linkedin"
-    },
-    {
-      "name": "YouTube",
-      "url": "https://youtube.com/@brilliantaksan",
-      "icon": "youtube"
     }
   ],
   "booking": {
@@ -122,6 +118,11 @@
         "description": "Share a meal and have a deeper conversation."
       }
     ]
+  },
+  "projectsSection": {
+    "label": "Projects",
+    "title": "See What I'm Working On",
+    "description": "a collection of what I've been building."
   },
   "projects": [
     {
@@ -172,35 +173,12 @@
       ]
     }
   ],
-  "creative": [
-    {
-      "title": "City Lights Portrait Reel",
-      "type": "video",
-      "caption": "Night portrait sequence with handheld motion and warm color grade.",
-      "client": "Personal Project",
-      "year": "2025",
-      "image": "",
-      "video": "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4"
-    },
-    {
-      "title": "Morning Studio Editorial",
-      "type": "photo",
-      "caption": "Editorial still set with soft directional light.",
-      "client": "Creator Collab",
-      "year": "2025",
-      "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1200&q=80",
-      "video": ""
-    },
-    {
-      "title": "Street Motion Frames",
-      "type": "photo",
-      "caption": "Fast shutter street series for a youth fashion concept.",
-      "client": "Spec Campaign",
-      "year": "2024",
-      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
-      "video": ""
-    }
-  ],
+  "creativeSection": {
+    "label": "Creative Portfolio",
+    "title": "Video + Photo Work",
+    "description": "Creative projects and visual stories from recent collaborations and experiments.\n(still in development)"
+  },
+  "creative": [],
   "contact": {
     "title": "Let's Build Something Real",
     "body": "If you're building a product, telling a story, exploring an idea, or you simply need someone to listen - reach out."

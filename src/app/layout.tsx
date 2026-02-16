@@ -3,27 +3,31 @@ import { Manrope } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { NavbarDock } from '@/components/portfolio/navbar-dock';
-import { siteContent } from '@/lib/site-content';
+import { getSiteContent } from '@/lib/site-content';
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-body' });
 
-export const metadata: Metadata = {
-  title: siteContent.meta.title,
-  description: siteContent.meta.description,
-  metadataBase: new URL(siteContent.meta.url),
-  openGraph: {
+export async function generateMetadata(): Promise<Metadata> {
+  const siteContent = await getSiteContent();
+
+  return {
     title: siteContent.meta.title,
     description: siteContent.meta.description,
-    images: [siteContent.meta.seoImage],
-    type: 'website'
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: siteContent.meta.title,
-    description: siteContent.meta.description,
-    images: [siteContent.meta.seoImage]
-  }
-};
+    metadataBase: new URL(siteContent.meta.url),
+    openGraph: {
+      title: siteContent.meta.title,
+      description: siteContent.meta.description,
+      images: [siteContent.meta.seoImage],
+      type: 'website'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: siteContent.meta.title,
+      description: siteContent.meta.description,
+      images: [siteContent.meta.seoImage]
+    }
+  };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

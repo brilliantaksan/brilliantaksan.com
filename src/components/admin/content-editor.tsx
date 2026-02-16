@@ -7,6 +7,7 @@ import type {
   CreativeItem,
   EducationItem,
   ProjectItem,
+  ShowcaseSectionContent,
   SiteContent,
   SocialIcon,
   SocialLink,
@@ -14,9 +15,32 @@ import type {
 } from '@/lib/types';
 
 const SOCIAL_ICONS: SocialIcon[] = ['instagram', 'github', 'linkedin', 'youtube', 'mail', 'globe'];
+const DEFAULT_PROJECTS_SECTION: ShowcaseSectionContent = {
+  label: 'Projects',
+  title: "See What I'm Working On",
+  description: "This site is just a collection of what I've been building."
+};
+const DEFAULT_CREATIVE_SECTION: ShowcaseSectionContent = {
+  label: 'Creative Portfolio',
+  title: 'Video + Photo Work',
+  description: 'Creative projects and visual stories from recent collaborations and experiments.'
+};
 
 function cloneContent(content: SiteContent) {
   return JSON.parse(JSON.stringify(content)) as SiteContent;
+}
+
+function normalizeContent(content: SiteContent) {
+  const next = cloneContent(content);
+  next.projectsSection = {
+    ...DEFAULT_PROJECTS_SECTION,
+    ...(next.projectsSection ?? {})
+  };
+  next.creativeSection = {
+    ...DEFAULT_CREATIVE_SECTION,
+    ...(next.creativeSection ?? {})
+  };
+  return next;
 }
 
 function parseCommaList(value: string) {
@@ -207,7 +231,7 @@ export function ContentEditor() {
         if (!response.ok || !payload.content) {
           throw new Error(payload.error || 'Failed to load content.');
         }
-        if (isMounted) setContent(payload.content);
+        if (isMounted) setContent(normalizeContent(payload.content));
       } catch (loadError) {
         const message = loadError instanceof Error ? loadError.message : 'Failed to load content.';
         if (isMounted) setError(message);
@@ -270,20 +294,8 @@ export function ContentEditor() {
   }
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={saveContent}
-          disabled={saving}
-          className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
-        >
-          {saving ? 'Saving...' : 'Save All Changes'}
-        </button>
-        {success ? <p className="text-sm text-emerald-600">{success}</p> : null}
-        {error ? <p className="text-sm text-destructive">{error}</p> : null}
-      </div>
-
+    <>
+      <div className="space-y-5 pb-28">
       <section className="space-y-3 rounded-2xl border border-border bg-card/80 p-4">
         <h2 className="text-base font-semibold">Profile</h2>
         <div className="grid gap-3 md:grid-cols-2">
@@ -510,6 +522,51 @@ export function ContentEditor() {
             Add Project
           </button>
         </div>
+        <div className="grid gap-2 md:grid-cols-2">
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Section Label</span>
+            <input
+              value={content.projectsSection?.label ?? DEFAULT_PROJECTS_SECTION.label}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.projectsSection = draft.projectsSection ?? { ...DEFAULT_PROJECTS_SECTION };
+                  draft.projectsSection.label = event.target.value;
+                })
+              }
+              placeholder="Projects"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Section Title</span>
+            <input
+              value={content.projectsSection?.title ?? DEFAULT_PROJECTS_SECTION.title}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.projectsSection = draft.projectsSection ?? { ...DEFAULT_PROJECTS_SECTION };
+                  draft.projectsSection.title = event.target.value;
+                })
+              }
+              placeholder="See What I'm Working On"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="space-y-1 md:col-span-2">
+            <span className="text-xs text-muted-foreground">Section Description</span>
+            <textarea
+              value={content.projectsSection?.description ?? DEFAULT_PROJECTS_SECTION.description}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.projectsSection = draft.projectsSection ?? { ...DEFAULT_PROJECTS_SECTION };
+                  draft.projectsSection.description = event.target.value;
+                })
+              }
+              rows={2}
+              placeholder="This site is just a collection of what I've been building."
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+        </div>
         <div className="space-y-3">
           {content.projects.map((project, projectIndex) => (
             <div key={`project-${projectIndex}`} className="space-y-2 rounded-xl border border-border bg-background/70 p-3">
@@ -645,6 +702,51 @@ export function ContentEditor() {
           >
             Add Creative Item
           </button>
+        </div>
+        <div className="grid gap-2 md:grid-cols-2">
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Section Label</span>
+            <input
+              value={content.creativeSection?.label ?? DEFAULT_CREATIVE_SECTION.label}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.creativeSection = draft.creativeSection ?? { ...DEFAULT_CREATIVE_SECTION };
+                  draft.creativeSection.label = event.target.value;
+                })
+              }
+              placeholder="Creative Portfolio"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="space-y-1">
+            <span className="text-xs text-muted-foreground">Section Title</span>
+            <input
+              value={content.creativeSection?.title ?? DEFAULT_CREATIVE_SECTION.title}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.creativeSection = draft.creativeSection ?? { ...DEFAULT_CREATIVE_SECTION };
+                  draft.creativeSection.title = event.target.value;
+                })
+              }
+              placeholder="Video + Photo Work"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
+          <label className="space-y-1 md:col-span-2">
+            <span className="text-xs text-muted-foreground">Section Description</span>
+            <textarea
+              value={content.creativeSection?.description ?? DEFAULT_CREATIVE_SECTION.description}
+              onChange={(event) =>
+                updateContent((draft) => {
+                  draft.creativeSection = draft.creativeSection ?? { ...DEFAULT_CREATIVE_SECTION };
+                  draft.creativeSection.description = event.target.value;
+                })
+              }
+              rows={2}
+              placeholder="Creative projects and visual stories from recent collaborations and experiments."
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+            />
+          </label>
         </div>
         <div className="space-y-3">
           {content.creative.map((item, index) => (
@@ -941,6 +1043,24 @@ export function ContentEditor() {
           />
         </label>
       </section>
-    </div>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-40 px-5 sm:px-6">
+        <div className="pointer-events-auto mx-auto flex w-full max-w-6xl justify-end">
+          <div className="flex max-w-full flex-wrap items-center gap-3 rounded-full border border-border/80 bg-background/90 px-3 py-2 shadow-[0_2px_10px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+            <button
+              type="button"
+              onClick={saveContent}
+              disabled={saving}
+              className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Save All Changes'}
+            </button>
+            {success ? <p className="text-sm text-emerald-600">{success}</p> : null}
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

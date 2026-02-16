@@ -65,6 +65,8 @@ Optional (recommended in production so saves persist):
 1. `GITHUB_CONTENT_TOKEN`
 2. `GITHUB_REPO`
 3. `GITHUB_BRANCH`
+4. `SUPABASE_CONTENT_BUCKET`
+5. `SUPABASE_CONTENT_PATH`
 
 ## Supabase setup
 
@@ -76,7 +78,8 @@ Optional (recommended in production so saves persist):
 ## Admin save behavior
 
 1. If `GITHUB_CONTENT_TOKEN` is set, saving in `/admin/studio` updates `content/site.json` in GitHub.
-2. If `GITHUB_CONTENT_TOKEN` is not set, saving updates local `content/site.json` (local development only).
+2. If `GITHUB_CONTENT_TOKEN` is not set, saving updates local `content/site.json` when writable (local development).
+3. If local filesystem is read-only (e.g. `/var/task` on serverless), saving falls back to Supabase Storage (`SUPABASE_CONTENT_BUCKET`/`SUPABASE_CONTENT_PATH`, default `media/content/site.json`).
 
 ## GitHub OAuth setup for Decap
 

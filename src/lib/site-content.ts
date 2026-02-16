@@ -1,4 +1,8 @@
-import siteData from '../../content/site.json';
-import type { SiteContent } from './types';
+import { unstable_noStore as noStore } from 'next/cache';
+import { readSiteContent } from '@/lib/content-store';
+import type { SiteContent } from '@/lib/types';
 
-export const siteContent: SiteContent = siteData as SiteContent;
+export async function getSiteContent(): Promise<SiteContent> {
+  noStore();
+  return readSiteContent();
+}

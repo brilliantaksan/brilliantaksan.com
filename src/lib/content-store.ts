@@ -1,5 +1,6 @@
-import { promises as fs } from 'fs';
+import { constants, promises as fs } from 'fs';
 import path from 'path';
+import { createSupabaseServerClient } from '@/lib/supabase-server';
 import type { SiteContent } from '@/lib/types';
 
 const SITE_CONTENT_RELATIVE_PATH = path.join('content', 'site.json');
@@ -12,6 +13,33 @@ interface GithubFileResponse {
 
 function getSiteContentAbsolutePath() {
   return path.join(process.cwd(), SITE_CONTENT_RELATIVE_PATH);
+}
+
+function getSupabaseContentConfig() {
+  const bucket = process.env.SUPABASE_CONTENT_BUCKET ?? process.env.NEXT_PUBLIC_SUPABASE_MEDIA_BUCKET ?? 'media';
+  const objectPath = process.env.SUPABASE_CONTENT_PATH ?? SITE_CONTENT_RELATIVE_PATH;
+  return { bucket, objectPath };
+}
+
+function hasSupabaseServerConfig() {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && (process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY));
+}
+
+function isReadonlyFileSystemError(error: unknown): error is NodeJS.ErrnoException {
+  return (
+    error instanceof Error &&
+    'code' in error &&
+    (error.code === 'EROFS' || error.code === 'EACCES' || error.code === 'EPERM')
+  );
+}
+
+async function isLocalContentWritable() {
+  try {
+    await fs.access(getSiteContentAbsolutePath(), constants.W_OK);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function getGithubRepoConfig() {
@@ -66,6 +94,33 @@ async function fetchGithubFile() {
   return { sha: data.sha, rawJson: decodeBase64Json(data.content) };
 }
 
+async function readSiteContentFromFile() {
+  const filePath = getSiteContentAbsolutePath();
+  const raw = await fs.readFile(filePath, 'utf8');
+  return JSON.parse(raw) as SiteContent;
+}
+
+async function readSiteContentFromSupabase() {
+  if (!hasSupabaseServerConfig()) {
+    return null;
+  }
+
+  const { bucket, objectPath } = getSupabaseContentConfig();
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase.storage.from(bucket).download(objectPath);
+
+  if (error) {
+    const message = error.message.toLowerCase();
+    if (message.includes('not found') || message.includes('404')) {
+      return null;
+    }
+    throw new Error(`Supabase content fetch failed: ${error.message}`);
+  }
+
+  const raw = await data.text();
+  return JSON.parse(raw) as SiteContent;
+}
+
 export async function readSiteContent(): Promise<SiteContent> {
   const { token } = getGithubRepoConfig();
 
@@ -74,9 +129,16 @@ export async function readSiteContent(): Promise<SiteContent> {
     return JSON.parse(rawJson) as SiteContent;
   }
 
-  const filePath = getSiteContentAbsolutePath();
-  const raw = await fs.readFile(filePath, 'utf8');
-  return JSON.parse(raw) as SiteContent;
+  if (await isLocalContentWritable()) {
+    return readSiteContentFromFile();
+  }
+
+  const supabaseContent = await readSiteContentFromSupabase();
+  if (supabaseContent) {
+    return supabaseContent;
+  }
+
+  return readSiteContentFromFile();
 }
 
 async function writeSiteContentToGithub(content: SiteContent) {
@@ -118,11 +180,45 @@ async function writeSiteContentToFile(content: SiteContent) {
   await fs.writeFile(filePath, `${JSON.stringify(content, null, 2)}\n`, 'utf8');
 }
 
+async function writeSiteContentToSupabase(content: SiteContent) {
+  if (!hasSupabaseServerConfig()) {
+    throw new Error('Missing Supabase server environment variables.');
+  }
+
+  const { bucket, objectPath } = getSupabaseContentConfig();
+  const rawJson = `${JSON.stringify(content, null, 2)}\n`;
+  const supabase = createSupabaseServerClient();
+  const { error } = await supabase.storage.from(bucket).upload(objectPath, Buffer.from(rawJson, 'utf8'), {
+    contentType: 'application/json',
+    cacheControl: '0',
+    upsert: true
+  });
+
+  if (error) {
+    throw new Error(`Supabase content update failed: ${error.message}`);
+  }
+}
+
 export async function writeSiteContent(content: SiteContent) {
   const { token } = getGithubRepoConfig();
   if (token) {
     await writeSiteContentToGithub(content);
     return;
   }
-  await writeSiteContentToFile(content);
+
+  try {
+    await writeSiteContentToFile(content);
+  } catch (fileError) {
+    if (!isReadonlyFileSystemError(fileError)) {
+      throw fileError;
+    }
+
+    if (!hasSupabaseServerConfig()) {
+      throw new Error(
+        'Server filesystem is read-only. Set GITHUB_CONTENT_TOKEN or configure Supabase server environment variables to persist admin changes.'
+      );
+    }
+
+    await writeSiteContentToSupabase(content);
+  }
 }

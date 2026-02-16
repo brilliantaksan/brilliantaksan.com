@@ -21,6 +21,16 @@ import type { EducationItem, SiteContent, SocialIcon, WorkItem } from '@/lib/typ
 const BLUR_FADE_DELAY = 0.05;
 const GLOBAL_TYPE_SCALE = designTokens.typography.globalScale ?? 1;
 const GLOBAL_LINE_HEIGHT_SCALE = designTokens.typography.globalLineHeight ?? 1;
+const DEFAULT_PROJECTS_SECTION = {
+  label: 'Projects',
+  title: "See What I'm Working On",
+  description: "This site is just a collection of what I've been building."
+};
+const DEFAULT_CREATIVE_SECTION = {
+  label: 'Creative Portfolio',
+  title: 'Video + Photo Work',
+  description: 'Creative projects and visual stories from recent collaborations and experiments.'
+};
 
 const socialIconMap: Record<SocialIcon, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
   instagram: Instagram,
@@ -141,6 +151,8 @@ function EducationRow({ item }: { item: EducationItem }) {
 
 export function HomePage({ content }: { content: SiteContent }) {
   const [creativeFilter, setCreativeFilter] = useState<'all' | 'video' | 'photo'>('all');
+  const projectsSection = { ...DEFAULT_PROJECTS_SECTION, ...(content.projectsSection ?? {}) };
+  const creativeSection = { ...DEFAULT_CREATIVE_SECTION, ...(content.creativeSection ?? {}) };
 
   const filteredCreative = useMemo(
     () =>
@@ -268,13 +280,13 @@ export function HomePage({ content }: { content: SiteContent }) {
         <BlurFade delay={BLUR_FADE_DELAY}>
           <div className="space-y-3 text-center">
             <p className="mx-auto inline-flex rounded-full border border-border bg-card px-3 py-1 uppercase text-muted-foreground" style={typeStyles.pill}>
-              Projects
+              {projectsSection.label}
             </p>
             <h2 className="font-extrabold tracking-tight text-foreground" style={typeStyles.showcaseTitle}>
-              {"See What I'm Working On"}
+              {projectsSection.title}
             </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground" style={typeStyles.showcaseBody}>
-              {"This site is just a collection of what I've been building."}
+              {projectsSection.description}
             </p>
           </div>
         </BlurFade>
@@ -291,13 +303,13 @@ export function HomePage({ content }: { content: SiteContent }) {
         <BlurFade delay={BLUR_FADE_DELAY}>
           <div className="space-y-2 text-center">
             <p className="mx-auto inline-flex rounded-full border border-border bg-card px-3 py-1 uppercase text-muted-foreground" style={typeStyles.pill}>
-              Creative Portfolio
+              {creativeSection.label}
             </p>
             <h2 className="font-extrabold tracking-tight text-foreground" style={typeStyles.showcaseTitle}>
-              Video + Photo Work
+              {creativeSection.title}
             </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground" style={typeStyles.showcaseBody}>
-              Creative projects and visual stories from recent collaborations and experiments.
+              {creativeSection.description}
             </p>
           </div>
         </BlurFade>

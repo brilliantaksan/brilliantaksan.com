@@ -91,6 +91,12 @@ export interface ContactContent {
   body: string;
 }
 
+export interface ShowcaseSectionContent {
+  label: string;
+  title: string;
+  description: string;
+}
+
 export interface SiteContent {
   meta: SiteMeta;
   hero: HeroContent;
@@ -100,7 +106,9 @@ export interface SiteContent {
   skills: string[];
   socials: SocialLink[];
   booking: BookingContent;
+  projectsSection?: ShowcaseSectionContent;
   projects: ProjectItem[];
+  creativeSection?: ShowcaseSectionContent;
   creative: CreativeItem[];
   contact: ContactContent;
 }
