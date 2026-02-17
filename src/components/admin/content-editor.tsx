@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { ChevronDown, GripVertical, Image as ImageIcon } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ADMIN_CONTENT_SAVE_REQUEST_EVENT,
+  ADMIN_CONTENT_SAVE_RESULT_EVENT,
+  ADMIN_CONTENT_SAVE_STATE_EVENT
+} from '@/lib/admin-content-events';
 import { getSupabaseBrowserClient } from '@/lib/supabase-browser';
 import type {
   BookingOption,
@@ -52,6 +58,13 @@ function parseCommaList(value: string) {
 
 function sanitizeFilename(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9.\-_]/g, '-');
+}
+
+function reorderItems<T>(items: T[], fromIndex: number, toIndex: number) {
+  if (fromIndex === toIndex) return;
+  const [moved] = items.splice(fromIndex, 1);
+  if (!moved) return;
+  items.splice(toIndex, 0, moved);
 }
 
 function MediaField({
@@ -218,6 +231,10 @@ export function ContentEditor() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [draggingProjectIndex, setDraggingProjectIndex] = useState<number | null>(null);
+  const [draggingCreativeIndex, setDraggingCreativeIndex] = useState<number | null>(null);
+  const [projectDropTargetIndex, setProjectDropTargetIndex] = useState<number | null>(null);
+  const [creativeDropTargetIndex, setCreativeDropTargetIndex] = useState<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -256,8 +273,8 @@ export function ContentEditor() {
     });
   }
 
-  async function saveContent() {
-    if (!content) return;
+  const saveContent = useCallback(async () => {
+    if (!content || saving) return;
     setSaving(true);
     setError('');
     setSuccess('');
@@ -272,13 +289,55 @@ export function ContentEditor() {
       if (!response.ok) {
         throw new Error(payload.error || 'Failed to save content.');
       }
-      setSuccess('Saved successfully.');
+      const successMessage = 'Saved successfully.';
+      setSuccess(successMessage);
+      window.dispatchEvent(
+        new CustomEvent(ADMIN_CONTENT_SAVE_RESULT_EVENT, {
+          detail: { status: 'success', message: successMessage }
+        })
+      );
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : 'Failed to save content.';
       setError(message);
+      window.dispatchEvent(
+        new CustomEvent(ADMIN_CONTENT_SAVE_RESULT_EVENT, {
+          detail: { status: 'error', message }
+        })
+      );
     } finally {
       setSaving(false);
     }
+  }, [content, saving]);
+
+  useEffect(() => {
+    const onSaveRequest = () => {
+      void saveContent();
+    };
+
+    window.addEventListener(ADMIN_CONTENT_SAVE_REQUEST_EVENT, onSaveRequest);
+    return () => window.removeEventListener(ADMIN_CONTENT_SAVE_REQUEST_EVENT, onSaveRequest);
+  }, [saveContent]);
+
+  useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent(ADMIN_CONTENT_SAVE_STATE_EVENT, {
+        detail: { saving }
+      })
+    );
+  }, [saving]);
+
+  function dropProjectAt(toIndex: number) {
+    if (draggingProjectIndex === null || draggingProjectIndex === toIndex) return;
+    updateContent((draft) => {
+      reorderItems(draft.projects, draggingProjectIndex, toIndex);
+    });
+  }
+
+  function dropCreativeAt(toIndex: number) {
+    if (draggingCreativeIndex === null || draggingCreativeIndex === toIndex) return;
+    updateContent((draft) => {
+      reorderItems(draft.creative, draggingCreativeIndex, toIndex);
+    });
   }
 
   if (loading) {
@@ -296,7 +355,15 @@ export function ContentEditor() {
   return (
     <>
       <div className="space-y-5 pb-28">
-      <section className="space-y-3 rounded-2xl border border-border bg-card/80 p-4">
+        {success ? (
+          <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3 text-sm text-emerald-700 dark:text-emerald-300">
+            {success}
+          </div>
+        ) : null}
+        {error ? (
+          <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+        ) : null}
+        <section className="space-y-3 rounded-2xl border border-border bg-card/80 p-4">
         <h2 className="text-base font-semibold">Profile</h2>
         <div className="grid gap-3 md:grid-cols-2">
           <label className="space-y-1">
@@ -567,126 +634,186 @@ export function ContentEditor() {
             />
           </label>
         </div>
+        <p className="text-xs text-muted-foreground">Drag any card by its handle to reorder.</p>
         <div className="space-y-3">
           {content.projects.map((project, projectIndex) => (
-            <div key={`project-${projectIndex}`} className="space-y-2 rounded-xl border border-border bg-background/70 p-3">
-              <div className="grid gap-2 md:grid-cols-2">
-                <input
-                  value={project.title}
-                  onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].title = event.target.value))}
-                  placeholder="Project Title"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={project.dates}
-                  onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].dates = event.target.value))}
-                  placeholder="Dates"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={project.href || ''}
-                  onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].href = event.target.value))}
-                  placeholder="Primary URL"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm md:col-span-2"
-                />
-              </div>
-              <textarea
-                value={project.description}
-                onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].description = event.target.value))}
-                placeholder="Project Description"
-                rows={3}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <input
-                value={(project.technologies || []).join(', ')}
-                onChange={(event) =>
-                  updateContent((draft) => {
-                    draft.projects[projectIndex].technologies = parseCommaList(event.target.value);
-                  })
-                }
-                placeholder="Technologies (comma separated)"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <div className="grid gap-2 md:grid-cols-2">
-                <MediaField
-                  label="Thumbnail Image"
-                  value={project.image || ''}
-                  onChange={(nextValue) => updateContent((draft) => void (draft.projects[projectIndex].image = nextValue))}
-                  accept="image/*"
-                  folder="projects"
-                />
-                <MediaField
-                  label="Project Video"
-                  value={project.video || ''}
-                  onChange={(nextValue) => updateContent((draft) => void (draft.projects[projectIndex].video = nextValue))}
-                  accept="video/*"
-                  folder="projects"
-                />
-              </div>
+            <div
+              key={`project-${projectIndex}`}
+              draggable
+              onDragStart={(event) => {
+                setDraggingProjectIndex(projectIndex);
+                event.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setProjectDropTargetIndex(projectIndex);
+              }}
+              onDragLeave={() => {
+                setProjectDropTargetIndex((current) => (current === projectIndex ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                dropProjectAt(projectIndex);
+                setDraggingProjectIndex(null);
+                setProjectDropTargetIndex(null);
+              }}
+              onDragEnd={() => {
+                setDraggingProjectIndex(null);
+                setProjectDropTargetIndex(null);
+              }}
+              className={`rounded-xl border bg-background/70 p-3 transition-colors ${
+                projectDropTargetIndex === projectIndex ? 'border-primary/70 bg-primary/5' : 'border-border'
+              }`}
+            >
+              <details className="group space-y-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                      <GripVertical className="h-4 w-4" />
+                    </span>
+                    <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
+                      {project.video ? (
+                        <video src={project.video} className="h-full w-full object-cover" muted playsInline />
+                      ) : project.image ? (
+                        <img src={project.image} alt={project.title || 'Project thumbnail'} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                          <ImageIcon className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-foreground">
+                        {project.title || `Project ${projectIndex + 1}`}
+                      </p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {project.video ? 'Has video preview' : project.image ? 'Has image preview' : 'No media added'}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                </summary>
 
-              <div className="space-y-2 rounded-lg border border-border bg-card/50 p-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Project Links</p>
+                <div className="space-y-2">
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <input
+                      value={project.title}
+                      onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].title = event.target.value))}
+                      placeholder="Project Title"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={project.dates}
+                      onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].dates = event.target.value))}
+                      placeholder="Dates"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={project.href || ''}
+                      onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].href = event.target.value))}
+                      placeholder="Primary URL"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm md:col-span-2"
+                    />
+                  </div>
+                  <textarea
+                    value={project.description}
+                    onChange={(event) => updateContent((draft) => void (draft.projects[projectIndex].description = event.target.value))}
+                    placeholder="Project Description"
+                    rows={3}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <input
+                    value={(project.technologies || []).join(', ')}
+                    onChange={(event) =>
+                      updateContent((draft) => {
+                        draft.projects[projectIndex].technologies = parseCommaList(event.target.value);
+                      })
+                    }
+                    placeholder="Technologies (comma separated)"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <MediaField
+                      label="Thumbnail Image"
+                      value={project.image || ''}
+                      onChange={(nextValue) => updateContent((draft) => void (draft.projects[projectIndex].image = nextValue))}
+                      accept="image/*"
+                      folder="projects"
+                    />
+                    <MediaField
+                      label="Project Video"
+                      value={project.video || ''}
+                      onChange={(nextValue) => updateContent((draft) => void (draft.projects[projectIndex].video = nextValue))}
+                      accept="video/*"
+                      folder="projects"
+                    />
+                  </div>
+
+                  <div className="space-y-2 rounded-lg border border-border bg-card/50 p-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Project Links</p>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          updateContent((draft) => {
+                            draft.projects[projectIndex].links.push({ type: '', href: '' });
+                          })
+                        }
+                        className="rounded-full border border-border px-3 py-1 text-xs font-semibold"
+                      >
+                        Add Link
+                      </button>
+                    </div>
+                    {project.links.map((link, linkIndex) => (
+                      <div key={`project-${projectIndex}-link-${linkIndex}`} className="grid gap-2 md:grid-cols-[1fr_2fr_auto]">
+                        <input
+                          value={link.type}
+                          onChange={(event) =>
+                            updateContent((draft) => {
+                              draft.projects[projectIndex].links[linkIndex].type = event.target.value;
+                            })
+                          }
+                          placeholder="Type"
+                          className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                        />
+                        <input
+                          value={link.href}
+                          onChange={(event) =>
+                            updateContent((draft) => {
+                              draft.projects[projectIndex].links[linkIndex].href = event.target.value;
+                            })
+                          }
+                          placeholder="URL"
+                          className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            updateContent((draft) => {
+                              draft.projects[projectIndex].links.splice(linkIndex, 1);
+                            })
+                          }
+                          className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
                   <button
                     type="button"
                     onClick={() =>
                       updateContent((draft) => {
-                        draft.projects[projectIndex].links.push({ type: '', href: '' });
+                        draft.projects.splice(projectIndex, 1);
                       })
                     }
-                    className="rounded-full border border-border px-3 py-1 text-xs font-semibold"
+                    className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
                   >
-                    Add Link
+                    Remove Project
                   </button>
                 </div>
-                {project.links.map((link, linkIndex) => (
-                  <div key={`project-${projectIndex}-link-${linkIndex}`} className="grid gap-2 md:grid-cols-[1fr_2fr_auto]">
-                    <input
-                      value={link.type}
-                      onChange={(event) =>
-                        updateContent((draft) => {
-                          draft.projects[projectIndex].links[linkIndex].type = event.target.value;
-                        })
-                      }
-                      placeholder="Type"
-                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                    />
-                    <input
-                      value={link.href}
-                      onChange={(event) =>
-                        updateContent((draft) => {
-                          draft.projects[projectIndex].links[linkIndex].href = event.target.value;
-                        })
-                      }
-                      placeholder="URL"
-                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        updateContent((draft) => {
-                          draft.projects[projectIndex].links.splice(linkIndex, 1);
-                        })
-                      }
-                      className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  updateContent((draft) => {
-                    draft.projects.splice(projectIndex, 1);
-                  })
-                }
-                className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
-              >
-                Remove Project
-              </button>
+              </details>
             </div>
           ))}
         </div>
@@ -748,73 +875,131 @@ export function ContentEditor() {
             />
           </label>
         </div>
+        <p className="text-xs text-muted-foreground">Drag cards to reorder your creative showcase.</p>
         <div className="space-y-3">
           {content.creative.map((item, index) => (
-            <div key={`creative-${index}`} className="space-y-2 rounded-xl border border-border bg-background/70 p-3">
-              <div className="grid gap-2 md:grid-cols-2">
-                <input
-                  value={item.title}
-                  onChange={(event) => updateContent((draft) => void (draft.creative[index].title = event.target.value))}
-                  placeholder="Title"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <select
-                  value={item.type}
-                  onChange={(event) =>
-                    updateContent((draft) => void (draft.creative[index].type = event.target.value as CreativeItem['type']))
-                  }
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                >
-                  <option value="photo">Photo</option>
-                  <option value="video">Video</option>
-                </select>
-                <input
-                  value={item.client}
-                  onChange={(event) => updateContent((draft) => void (draft.creative[index].client = event.target.value))}
-                  placeholder="Client"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.year}
-                  onChange={(event) => updateContent((draft) => void (draft.creative[index].year = event.target.value))}
-                  placeholder="Year"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-              </div>
-              <textarea
-                value={item.caption}
-                onChange={(event) => updateContent((draft) => void (draft.creative[index].caption = event.target.value))}
-                rows={2}
-                placeholder="Caption"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <div className="grid gap-2 md:grid-cols-2">
-                <MediaField
-                  label="Image"
-                  value={item.image || ''}
-                  onChange={(nextValue) => updateContent((draft) => void (draft.creative[index].image = nextValue))}
-                  accept="image/*"
-                  folder="creative"
-                />
-                <MediaField
-                  label="Video"
-                  value={item.video || ''}
-                  onChange={(nextValue) => updateContent((draft) => void (draft.creative[index].video = nextValue))}
-                  accept="video/*"
-                  folder="creative"
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() =>
-                  updateContent((draft) => {
-                    draft.creative.splice(index, 1);
-                  })
-                }
-                className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
-              >
-                Remove Creative Item
-              </button>
+            <div
+              key={`creative-${index}`}
+              draggable
+              onDragStart={(event) => {
+                setDraggingCreativeIndex(index);
+                event.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setCreativeDropTargetIndex(index);
+              }}
+              onDragLeave={() => {
+                setCreativeDropTargetIndex((current) => (current === index ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                dropCreativeAt(index);
+                setDraggingCreativeIndex(null);
+                setCreativeDropTargetIndex(null);
+              }}
+              onDragEnd={() => {
+                setDraggingCreativeIndex(null);
+                setCreativeDropTargetIndex(null);
+              }}
+              className={`rounded-xl border bg-background/70 p-3 transition-colors ${
+                creativeDropTargetIndex === index ? 'border-primary/70 bg-primary/5' : 'border-border'
+              }`}
+            >
+              <details className="group space-y-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                      <GripVertical className="h-4 w-4" />
+                    </span>
+                    <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
+                      {item.video ? (
+                        <video src={item.video} className="h-full w-full object-cover" muted playsInline />
+                      ) : item.image ? (
+                        <img src={item.image} alt={item.title || 'Creative preview'} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                          <ImageIcon className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-foreground">{item.title || `Creative ${index + 1}`}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {item.type === 'video' ? 'Video project' : 'Photo project'}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                </summary>
+
+                <div className="space-y-2">
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <input
+                      value={item.title}
+                      onChange={(event) => updateContent((draft) => void (draft.creative[index].title = event.target.value))}
+                      placeholder="Title"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <select
+                      value={item.type}
+                      onChange={(event) =>
+                        updateContent((draft) => void (draft.creative[index].type = event.target.value as CreativeItem['type']))
+                      }
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    >
+                      <option value="photo">Photo</option>
+                      <option value="video">Video</option>
+                    </select>
+                    <input
+                      value={item.client}
+                      onChange={(event) => updateContent((draft) => void (draft.creative[index].client = event.target.value))}
+                      placeholder="Client"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.year}
+                      onChange={(event) => updateContent((draft) => void (draft.creative[index].year = event.target.value))}
+                      placeholder="Year"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <textarea
+                    value={item.caption}
+                    onChange={(event) => updateContent((draft) => void (draft.creative[index].caption = event.target.value))}
+                    rows={2}
+                    placeholder="Caption"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <MediaField
+                      label="Image"
+                      value={item.image || ''}
+                      onChange={(nextValue) => updateContent((draft) => void (draft.creative[index].image = nextValue))}
+                      accept="image/*"
+                      folder="creative"
+                    />
+                    <MediaField
+                      label="Video"
+                      value={item.video || ''}
+                      onChange={(nextValue) => updateContent((draft) => void (draft.creative[index].video = nextValue))}
+                      accept="video/*"
+                      folder="creative"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateContent((draft) => {
+                        draft.creative.splice(index, 1);
+                      })
+                    }
+                    className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
+                  >
+                    Remove Creative Item
+                  </button>
+                </div>
+              </details>
             </div>
           ))}
         </div>
@@ -1045,22 +1230,6 @@ export function ContentEditor() {
       </section>
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-40 px-5 sm:px-6">
-        <div className="pointer-events-auto mx-auto flex w-full max-w-6xl justify-end">
-          <div className="flex max-w-full flex-wrap items-center gap-3 rounded-full border border-border/80 bg-background/90 px-3 py-2 shadow-[0_2px_10px_rgba(0,0,0,0.22)] backdrop-blur-xl">
-            <button
-              type="button"
-              onClick={saveContent}
-              disabled={saving}
-              className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
-            >
-              {saving ? 'Saving...' : 'Save All Changes'}
-            </button>
-            {success ? <p className="text-sm text-emerald-600">{success}</p> : null}
-            {error ? <p className="text-sm text-destructive">{error}</p> : null}
-          </div>
-        </div>
-      </div>
     </>
   );
 }
