@@ -15,8 +15,7 @@ import {
   Instagram,
   Loader2,
   Linkedin,
-  Save,
-  Youtube
+  Save
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -40,8 +39,7 @@ const navItems = [
 const socialItems = [
   { href: 'https://github.com/brilliantaksan', icon: Github, label: 'GitHub' },
   { href: 'https://linkedin.com/in/brilliantaksan', icon: Linkedin, label: 'LinkedIn' },
-  { href: 'https://instagram.com/brilliantaksan', icon: Instagram, label: 'Instagram' },
-  { href: 'https://youtube.com/@brilliantaksan', icon: Youtube, label: 'YouTube' }
+  { href: 'https://instagram.com/brilliantaksan', icon: Instagram, label: 'Instagram' }
 ];
 
 function DockIcon({
@@ -229,16 +227,12 @@ export function NavbarDock() {
           </>
         ) : null}
 
-        {!isCompact ? (
-          <>
-            <div className="mx-1 h-8 w-px bg-border" />
-            <DockIcon mouseX={mouseX}>
-              <div className="flex h-12 w-12 items-center justify-center rounded-full text-foreground transition hover:bg-secondary" title="Theme">
-                <ModeToggle />
-              </div>
-            </DockIcon>
-          </>
-        ) : null}
+        <>
+          <div className={cn('w-px bg-border', isCompact ? 'mx-0.5 h-6' : 'mx-1 h-8')} />
+          <DockIcon mouseX={mouseX} compact={isCompact}>
+            <ModeToggle compact={isCompact} />
+          </DockIcon>
+        </>
       </div>
     </div>
   );

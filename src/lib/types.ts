@@ -52,6 +52,7 @@ export interface ProjectItem {
 export interface CreativeItem {
   title: string;
   type: 'video' | 'photo';
+  href?: string;
   caption: string;
   client: string;
   year: string;

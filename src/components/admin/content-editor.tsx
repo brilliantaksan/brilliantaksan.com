@@ -190,6 +190,7 @@ function defaultCreativeItem(): CreativeItem {
   return {
     title: '',
     type: 'photo',
+    href: '',
     caption: '',
     client: '',
     year: '',
@@ -962,6 +963,12 @@ export function ContentEditor() {
                       onChange={(event) => updateContent((draft) => void (draft.creative[index].year = event.target.value))}
                       placeholder="Year"
                       className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.href || ''}
+                      onChange={(event) => updateContent((draft) => void (draft.creative[index].href = event.target.value))}
+                      placeholder="Primary URL"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm md:col-span-2"
                     />
                   </div>
                   <textarea

@@ -334,44 +334,54 @@ export function HomePage({ content }: { content: SiteContent }) {
 
         <AnimatePresence mode="popLayout">
           <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {filteredCreative.map((item, index) => (
-              <motion.article
-                key={`${item.title}-${item.year}`}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.24, delay: index * 0.03 }}
-                className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
-              >
-                {item.video ? (
-                  <video src={item.video} className="h-52 w-full object-cover" autoPlay loop muted playsInline />
-                ) : item.image ? (
-                  <img src={item.image} alt={item.title} className="h-52 w-full object-cover" />
-                ) : (
-                  <div className="flex h-52 items-center justify-center bg-secondary">
-                    <Camera className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                )}
-
-                <div className="space-y-2 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="font-semibold" style={typeStyles.cardTitle}>{item.title}</h3>
-                    <span className="uppercase text-muted-foreground" style={typeStyles.pill}>{item.year}</span>
-                  </div>
-                  <p className="text-muted-foreground" style={typeStyles.meta}>{item.caption}</p>
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="rounded-full bg-secondary px-2 py-1 text-muted-foreground" style={typeStyles.pill}>
-                      {item.client}
-                    </span>
-                    <span className="inline-flex items-center gap-1 text-muted-foreground" style={typeStyles.pill}>
-                      {item.type === 'video' ? <Play className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5" />}
-                      {item.type === 'video' ? 'Video' : 'Photo'}
-                    </span>
-                  </div>
+            {filteredCreative.map((item, index) => {
+              const mediaNode = item.video ? (
+                <video src={item.video} className="h-52 w-full object-cover" autoPlay loop muted playsInline />
+              ) : item.image ? (
+                <img src={item.image} alt={item.title} className="h-52 w-full object-cover" />
+              ) : (
+                <div className="flex h-52 items-center justify-center bg-secondary">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
                 </div>
-              </motion.article>
-            ))}
+              );
+
+              return (
+                <motion.article
+                  key={`${item.title}-${item.year}`}
+                  layout
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.24, delay: index * 0.03 }}
+                  className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                >
+                  {item.href ? (
+                    <a href={item.href} target="_blank" rel="noreferrer" className="block">
+                      {mediaNode}
+                    </a>
+                  ) : (
+                    mediaNode
+                  )}
+
+                  <div className="space-y-2 p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-semibold" style={typeStyles.cardTitle}>{item.title}</h3>
+                      <span className="uppercase text-muted-foreground" style={typeStyles.pill}>{item.year}</span>
+                    </div>
+                    <p className="text-muted-foreground" style={typeStyles.meta}>{item.caption}</p>
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="rounded-full bg-secondary px-2 py-1 text-muted-foreground" style={typeStyles.pill}>
+                        {item.client}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-muted-foreground" style={typeStyles.pill}>
+                        {item.type === 'video' ? <Play className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5" />}
+                        {item.type === 'video' ? 'Video' : 'Photo'}
+                      </span>
+                    </div>
+                  </div>
+                </motion.article>
+              );
+            })}
           </motion.div>
         </AnimatePresence>
       </section>
