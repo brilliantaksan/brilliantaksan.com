@@ -64,6 +64,18 @@ const typeStyles = {
 };
 
 const rowDescriptionStyle: CSSProperties = typeStyles.meta;
+const heroTitleMaxSize = typeof typeStyles.heroTitle.fontSize === 'number' ? `${typeStyles.heroTitle.fontSize}px` : typeStyles.heroTitle.fontSize;
+const ctaLabelMaxSize = typeof typeStyles.meta.fontSize === 'number' ? `${typeStyles.meta.fontSize}px` : typeStyles.meta.fontSize;
+const heroTitleMobileStyle: CSSProperties = {
+  ...typeStyles.heroTitle,
+  fontSize: `clamp(1.2rem, 6.2vw, ${heroTitleMaxSize})`,
+  lineHeight: 1.05
+};
+const ctaLabelStyle: CSSProperties = {
+  ...typeStyles.meta,
+  fontSize: `clamp(0.78rem, 2.8vw, ${ctaLabelMaxSize})`,
+  lineHeight: 1.2
+};
 
 function getInitials(value: string) {
   const parts = value.trim().split(/\s+/).filter(Boolean);
@@ -175,7 +187,9 @@ export function HomePage({ content }: { content: SiteContent }) {
               <p className="uppercase text-muted-foreground" style={typeStyles.location}>{content.meta.location}</p>
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-3 md:block">
                 <div className="min-w-0 space-y-2">
-                  <h1 className="font-extrabold text-foreground" style={typeStyles.heroTitle}>{content.hero.headline}</h1>
+                  <h1 className="whitespace-nowrap font-extrabold text-foreground" style={heroTitleMobileStyle}>
+                    {content.hero.headline}
+                  </h1>
                   <p className="max-w-2xl font-medium text-foreground/95 md:hidden" style={typeStyles.heroLead}>
                     {content.hero.subheadline}
                   </p>
@@ -199,7 +213,7 @@ export function HomePage({ content }: { content: SiteContent }) {
                   </div>
                 </div>
                 <div className="flex-shrink-0 md:hidden">
-                  <div className="h-24 w-24 overflow-hidden rounded-full border border-border bg-card shadow-sm">
+                  <div className="h-20 w-20 overflow-hidden rounded-full border border-border bg-card shadow-sm">
                     <img src={content.meta.avatarUrl} alt={content.meta.name} className="h-full w-full object-cover" />
                   </div>
                 </div>
@@ -235,18 +249,18 @@ export function HomePage({ content }: { content: SiteContent }) {
           </div>
         </BlurFade>
 
-        <BlurFade delay={BLUR_FADE_DELAY * 2} className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+        <BlurFade delay={BLUR_FADE_DELAY * 2} className="grid grid-cols-2 gap-2 sm:flex sm:flex-nowrap sm:gap-3">
           <a
             href="#booking"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary px-3 py-2 text-center font-semibold text-primary-foreground shadow-md transition hover:brightness-95 sm:px-5 sm:py-2.5"
-            style={typeStyles.meta}
+            className="inline-flex w-full min-h-[44px] items-center justify-center whitespace-nowrap rounded-full bg-primary px-2.5 py-2 text-center font-semibold text-primary-foreground shadow-md transition hover:brightness-95 sm:w-auto sm:px-5 sm:py-2.5"
+            style={ctaLabelStyle}
           >
             {content.hero.primaryCtaLabel}
           </a>
           <a
             href="#projects"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-border bg-card px-3 py-2 text-center font-semibold transition hover:bg-secondary sm:px-5 sm:py-2.5"
-            style={typeStyles.meta}
+            className="inline-flex w-full min-h-[44px] items-center justify-center whitespace-nowrap rounded-full border border-border bg-card px-2.5 py-2 text-center font-semibold transition hover:bg-secondary sm:w-auto sm:px-5 sm:py-2.5"
+            style={ctaLabelStyle}
           >
             {content.hero.secondaryCtaLabel}
           </a>
