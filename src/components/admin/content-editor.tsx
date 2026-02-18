@@ -235,10 +235,12 @@ export function ContentEditor() {
   const [draggingProjectIndex, setDraggingProjectIndex] = useState<number | null>(null);
   const [draggingCreativeIndex, setDraggingCreativeIndex] = useState<number | null>(null);
   const [draggingWorkIndex, setDraggingWorkIndex] = useState<number | null>(null);
+  const [draggingEducationIndex, setDraggingEducationIndex] = useState<number | null>(null);
   const [draggingSocialIndex, setDraggingSocialIndex] = useState<number | null>(null);
   const [projectDropTargetIndex, setProjectDropTargetIndex] = useState<number | null>(null);
   const [creativeDropTargetIndex, setCreativeDropTargetIndex] = useState<number | null>(null);
   const [workDropTargetIndex, setWorkDropTargetIndex] = useState<number | null>(null);
+  const [educationDropTargetIndex, setEducationDropTargetIndex] = useState<number | null>(null);
   const [socialDropTargetIndex, setSocialDropTargetIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -349,6 +351,13 @@ export function ContentEditor() {
     if (draggingWorkIndex === null || draggingWorkIndex === toIndex) return;
     updateContent((draft) => {
       reorderItems(draft.work, draggingWorkIndex, toIndex);
+    });
+  }
+
+  function dropEducationAt(toIndex: number) {
+    if (draggingEducationIndex === null || draggingEducationIndex === toIndex) return;
+    updateContent((draft) => {
+      reorderItems(draft.education, draggingEducationIndex, toIndex);
     });
   }
 
@@ -521,11 +530,6 @@ export function ContentEditor() {
           {content.work.map((item, index) => (
             <div
               key={`work-${index}`}
-              draggable
-              onDragStart={(event) => {
-                setDraggingWorkIndex(index);
-                event.dataTransfer.effectAllowed = 'move';
-              }}
               onDragOver={(event) => {
                 event.preventDefault();
                 setWorkDropTargetIndex(index);
@@ -550,7 +554,16 @@ export function ContentEditor() {
               <details className="group space-y-3">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
                   <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                    <span
+                      draggable
+                      onClick={(event) => event.preventDefault()}
+                      onDragStart={(event) => {
+                        setDraggingWorkIndex(index);
+                        event.dataTransfer.effectAllowed = 'move';
+                      }}
+                      className="inline-flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md border border-border bg-background text-muted-foreground active:cursor-grabbing"
+                      title="Drag to reorder"
+                    >
                       <GripVertical className="h-4 w-4" />
                     </span>
                     <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border bg-background">
@@ -714,11 +727,6 @@ export function ContentEditor() {
           {content.projects.map((project, projectIndex) => (
             <div
               key={`project-${projectIndex}`}
-              draggable
-              onDragStart={(event) => {
-                setDraggingProjectIndex(projectIndex);
-                event.dataTransfer.effectAllowed = 'move';
-              }}
               onDragOver={(event) => {
                 event.preventDefault();
                 setProjectDropTargetIndex(projectIndex);
@@ -743,7 +751,16 @@ export function ContentEditor() {
               <details className="group space-y-3">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
                   <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                    <span
+                      draggable
+                      onClick={(event) => event.preventDefault()}
+                      onDragStart={(event) => {
+                        setDraggingProjectIndex(projectIndex);
+                        event.dataTransfer.effectAllowed = 'move';
+                      }}
+                      className="inline-flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md border border-border bg-background text-muted-foreground active:cursor-grabbing"
+                      title="Drag to reorder"
+                    >
                       <GripVertical className="h-4 w-4" />
                     </span>
                     <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
@@ -955,11 +972,6 @@ export function ContentEditor() {
           {content.creative.map((item, index) => (
             <div
               key={`creative-${index}`}
-              draggable
-              onDragStart={(event) => {
-                setDraggingCreativeIndex(index);
-                event.dataTransfer.effectAllowed = 'move';
-              }}
               onDragOver={(event) => {
                 event.preventDefault();
                 setCreativeDropTargetIndex(index);
@@ -984,7 +996,16 @@ export function ContentEditor() {
               <details className="group space-y-3">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
                   <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                    <span
+                      draggable
+                      onClick={(event) => event.preventDefault()}
+                      onDragStart={(event) => {
+                        setDraggingCreativeIndex(index);
+                        event.dataTransfer.effectAllowed = 'move';
+                      }}
+                      className="inline-flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md border border-border bg-background text-muted-foreground active:cursor-grabbing"
+                      title="Drag to reorder"
+                    >
                       <GripVertical className="h-4 w-4" />
                     </span>
                     <div className="h-12 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
@@ -1097,9 +1118,46 @@ export function ContentEditor() {
             Add Education
           </button>
         </div>
+        <p className="text-xs text-muted-foreground">Drag cards by the handle to reorder your education entries.</p>
         <div className="space-y-3">
           {content.education.map((item, index) => (
-            <div key={`education-${index}`} className="space-y-2 rounded-xl border border-border bg-background/70 p-3">
+            <div
+              key={`education-${index}`}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setEducationDropTargetIndex(index);
+              }}
+              onDragLeave={() => {
+                setEducationDropTargetIndex((current) => (current === index ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                dropEducationAt(index);
+                setDraggingEducationIndex(null);
+                setEducationDropTargetIndex(null);
+              }}
+              onDragEnd={() => {
+                setDraggingEducationIndex(null);
+                setEducationDropTargetIndex(null);
+              }}
+              className={`space-y-2 rounded-xl border bg-background/70 p-3 transition-colors ${
+                educationDropTargetIndex === index ? 'border-primary/70 bg-primary/5' : 'border-border'
+              }`}
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <span
+                  draggable
+                  onDragStart={(event) => {
+                    setDraggingEducationIndex(index);
+                    event.dataTransfer.effectAllowed = 'move';
+                  }}
+                  className="inline-flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md border border-border bg-background text-muted-foreground active:cursor-grabbing"
+                  title="Drag to reorder"
+                >
+                  <GripVertical className="h-4 w-4" />
+                </span>
+                <p className="truncate text-sm font-semibold text-foreground">{item.school || `Education ${index + 1}`}</p>
+              </div>
               <div className="grid gap-2 md:grid-cols-2">
                 <input
                   value={item.school}
@@ -1111,6 +1169,12 @@ export function ContentEditor() {
                   value={item.degree}
                   onChange={(event) => updateContent((draft) => void (draft.education[index].degree = event.target.value))}
                   placeholder="Degree"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                />
+                <input
+                  value={item.href || ''}
+                  onChange={(event) => updateContent((draft) => void (draft.education[index].href = event.target.value))}
+                  placeholder="School URL"
                   className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
                 />
                 <input
@@ -1181,11 +1245,6 @@ export function ContentEditor() {
           {content.socials.map((item, index) => (
             <div
               key={`social-${index}`}
-              draggable
-              onDragStart={(event) => {
-                setDraggingSocialIndex(index);
-                event.dataTransfer.effectAllowed = 'move';
-              }}
               onDragOver={(event) => {
                 event.preventDefault();
                 setSocialDropTargetIndex(index);
@@ -1208,7 +1267,15 @@ export function ContentEditor() {
               }`}
             >
               <div className="mb-2 flex items-center gap-2">
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                <span
+                  draggable
+                  onDragStart={(event) => {
+                    setDraggingSocialIndex(index);
+                    event.dataTransfer.effectAllowed = 'move';
+                  }}
+                  className="inline-flex h-8 w-8 shrink-0 cursor-grab items-center justify-center rounded-md border border-border bg-background text-muted-foreground active:cursor-grabbing"
+                  title="Drag to reorder"
+                >
                   <GripVertical className="h-4 w-4" />
                 </span>
                 <p className="truncate text-sm font-semibold text-foreground">{item.name || `Social ${index + 1}`}</p>

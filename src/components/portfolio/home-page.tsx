@@ -65,11 +65,33 @@ const typeStyles = {
 
 const rowDescriptionStyle: CSSProperties = typeStyles.meta;
 const heroTitleMaxSize = typeof typeStyles.heroTitle.fontSize === 'number' ? `${typeStyles.heroTitle.fontSize}px` : typeStyles.heroTitle.fontSize;
+const heroLeadMaxSize = typeof typeStyles.heroLead.fontSize === 'number' ? `${typeStyles.heroLead.fontSize}px` : typeStyles.heroLead.fontSize;
+const heroBodyMaxSize = typeof typeStyles.body.fontSize === 'number' ? `${typeStyles.body.fontSize}px` : typeStyles.body.fontSize;
 const ctaLabelMaxSize = typeof typeStyles.meta.fontSize === 'number' ? `${typeStyles.meta.fontSize}px` : typeStyles.meta.fontSize;
 const heroTitleMobileStyle: CSSProperties = {
   ...typeStyles.heroTitle,
-  fontSize: `clamp(1.2rem, 6.2vw, ${heroTitleMaxSize})`,
+  fontSize: `clamp(1.95rem, 9vw, ${heroTitleMaxSize})`,
   lineHeight: 1.05
+};
+const heroLeadMobileStyle: CSSProperties = {
+  ...typeStyles.heroLead,
+  fontSize: `clamp(1.15rem, 5vw, ${heroLeadMaxSize})`,
+  lineHeight: 1.2
+};
+const heroBodyMobileStyle: CSSProperties = {
+  ...typeStyles.body,
+  fontSize: `clamp(1rem, 4.3vw, ${heroBodyMaxSize})`,
+  lineHeight: 1.45
+};
+const heroLeadResponsiveStyle: CSSProperties = {
+  ...typeStyles.heroLead,
+  fontSize: `clamp(1.15rem, 2.4vw, ${heroLeadMaxSize})`,
+  lineHeight: 1.2
+};
+const heroBodyResponsiveStyle: CSSProperties = {
+  ...typeStyles.body,
+  fontSize: `clamp(1rem, 1.85vw, ${heroBodyMaxSize})`,
+  lineHeight: 1.45
 };
 const ctaLabelStyle: CSSProperties = {
   ...typeStyles.meta,
@@ -187,13 +209,13 @@ export function HomePage({ content }: { content: SiteContent }) {
               <p className="uppercase text-muted-foreground" style={typeStyles.location}>{content.meta.location}</p>
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-3 md:block">
                 <div className="min-w-0 space-y-2">
-                  <h1 className="whitespace-nowrap font-extrabold text-foreground" style={heroTitleMobileStyle}>
+                  <h1 className="font-extrabold text-foreground" style={heroTitleMobileStyle}>
                     {content.hero.headline}
                   </h1>
-                  <p className="max-w-2xl font-medium text-foreground/95 md:hidden" style={typeStyles.heroLead}>
+                  <p className="max-w-2xl font-medium text-foreground/95 md:hidden" style={heroLeadMobileStyle}>
                     {content.hero.subheadline}
                   </p>
-                  <p className="max-w-2xl text-muted-foreground md:hidden" style={typeStyles.body}>{content.hero.intro}</p>
+                  <p className="max-w-2xl text-muted-foreground md:hidden" style={heroBodyMobileStyle}>{content.hero.intro}</p>
                   <div className="flex flex-wrap items-center gap-2 pt-1 md:hidden">
                     {content.socials.map((social) => {
                       const Icon = socialIconMap[social.icon] ?? Globe;
@@ -218,10 +240,10 @@ export function HomePage({ content }: { content: SiteContent }) {
                   </div>
                 </div>
               </div>
-              <p className="hidden max-w-2xl font-medium text-foreground/95 md:block" style={typeStyles.heroLead}>
+              <p className="hidden max-w-2xl font-medium text-foreground/95 md:block" style={heroLeadResponsiveStyle}>
                 {content.hero.subheadline}
               </p>
-              <p className="hidden max-w-2xl text-muted-foreground md:block" style={typeStyles.body}>{content.hero.intro}</p>
+              <p className="hidden max-w-2xl text-muted-foreground md:block" style={heroBodyResponsiveStyle}>{content.hero.intro}</p>
               <div className="hidden flex-wrap items-center gap-2 pt-1 md:flex">
                 {content.socials.map((social) => {
                   const Icon = socialIconMap[social.icon] ?? Globe;
