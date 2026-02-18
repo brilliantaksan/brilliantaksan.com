@@ -29,14 +29,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const siteContent = await getSiteContent();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${manrope.variable} min-h-screen bg-background text-foreground antialiased`}>
         <ThemeProvider>
           <div className="relative min-h-screen overflow-x-hidden">
             <div className="relative mx-auto w-full max-w-[940px] px-5 pb-28 pt-6 sm:px-6 md:pt-10">{children}</div>
-            <NavbarDock />
+            <NavbarDock socials={siteContent.socials} />
           </div>
         </ThemeProvider>
       </body>

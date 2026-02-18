@@ -90,6 +90,7 @@ export interface BookingContent {
 export interface ContactContent {
   title: string;
   body: string;
+  ctaEmail?: string;
 }
 
 export interface ShowcaseSectionContent {

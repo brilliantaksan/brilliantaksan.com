@@ -153,6 +153,7 @@ export function HomePage({ content }: { content: SiteContent }) {
   const [creativeFilter, setCreativeFilter] = useState<'all' | 'video' | 'photo'>('all');
   const projectsSection = { ...DEFAULT_PROJECTS_SECTION, ...(content.projectsSection ?? {}) };
   const creativeSection = { ...DEFAULT_CREATIVE_SECTION, ...(content.creativeSection ?? {}) };
+  const contactEmail = content.contact.ctaEmail?.trim() || content.meta.email;
 
   const filteredCreative = useMemo(
     () =>
@@ -172,12 +173,42 @@ export function HomePage({ content }: { content: SiteContent }) {
           <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl" style={{ display: 'grid', gap: designTokens.spacing.heroStackPx }}>
               <p className="uppercase text-muted-foreground" style={typeStyles.location}>{content.meta.location}</p>
-              <h1 className="font-extrabold text-foreground" style={typeStyles.heroTitle}>{content.hero.headline}</h1>
-              <p className="max-w-2xl font-medium text-foreground/95" style={typeStyles.heroLead}>
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-4 gap-y-3 md:block">
+                <div className="min-w-0 space-y-2">
+                  <h1 className="font-extrabold text-foreground" style={typeStyles.heroTitle}>{content.hero.headline}</h1>
+                  <p className="max-w-2xl font-medium text-foreground/95 md:hidden" style={typeStyles.heroLead}>
+                    {content.hero.subheadline}
+                  </p>
+                  <p className="max-w-2xl text-muted-foreground md:hidden" style={typeStyles.body}>{content.hero.intro}</p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1 md:hidden">
+                    {content.socials.map((social) => {
+                      const Icon = socialIconMap[social.icon] ?? Globe;
+                      return (
+                        <a
+                          key={`mobile-${social.name}`}
+                          href={social.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-full border border-border px-3 py-2 text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+                          title={social.name}
+                        >
+                          <Icon className="h-4 w-4" strokeWidth={1.8} />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="flex-shrink-0 md:hidden">
+                  <div className="h-24 w-24 overflow-hidden rounded-full border border-border bg-card shadow-sm">
+                    <img src={content.meta.avatarUrl} alt={content.meta.name} className="h-full w-full object-cover" />
+                  </div>
+                </div>
+              </div>
+              <p className="hidden max-w-2xl font-medium text-foreground/95 md:block" style={typeStyles.heroLead}>
                 {content.hero.subheadline}
               </p>
-              <p className="max-w-2xl text-muted-foreground" style={typeStyles.body}>{content.hero.intro}</p>
-              <div className="flex flex-wrap items-center gap-2 pt-1">
+              <p className="hidden max-w-2xl text-muted-foreground md:block" style={typeStyles.body}>{content.hero.intro}</p>
+              <div className="hidden flex-wrap items-center gap-2 pt-1 md:flex">
                 {content.socials.map((social) => {
                   const Icon = socialIconMap[social.icon] ?? Globe;
                   return (
@@ -196,7 +227,7 @@ export function HomePage({ content }: { content: SiteContent }) {
               </div>
             </div>
 
-            <div className="flex-shrink-0">
+            <div className="hidden flex-shrink-0 md:block">
               <div className="h-28 w-28 overflow-hidden rounded-full border border-border bg-card shadow-sm sm:h-32 sm:w-32">
                 <img src={content.meta.avatarUrl} alt={content.meta.name} className="h-full w-full object-cover" />
               </div>
@@ -204,17 +235,17 @@ export function HomePage({ content }: { content: SiteContent }) {
           </div>
         </BlurFade>
 
-        <BlurFade delay={BLUR_FADE_DELAY * 2} className="flex flex-wrap gap-3">
+        <BlurFade delay={BLUR_FADE_DELAY * 2} className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
           <a
             href="#booking"
-            className="inline-flex items-center rounded-full bg-primary px-5 py-2.5 font-semibold text-primary-foreground shadow-md transition hover:brightness-95"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary px-3 py-2 text-center font-semibold text-primary-foreground shadow-md transition hover:brightness-95 sm:px-5 sm:py-2.5"
             style={typeStyles.meta}
           >
             {content.hero.primaryCtaLabel}
           </a>
           <a
             href="#projects"
-            className="inline-flex items-center rounded-full border border-border bg-card px-5 py-2.5 font-semibold transition hover:bg-secondary"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-border bg-card px-3 py-2 text-center font-semibold transition hover:bg-secondary sm:px-5 sm:py-2.5"
             style={typeStyles.meta}
           >
             {content.hero.secondaryCtaLabel}
@@ -336,9 +367,20 @@ export function HomePage({ content }: { content: SiteContent }) {
           <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {filteredCreative.map((item, index) => {
               const mediaNode = item.video ? (
-                <video src={item.video} className="h-52 w-full object-cover" autoPlay loop muted playsInline />
+                <video
+                  src={item.video}
+                  className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
               ) : item.image ? (
-                <img src={item.image} alt={item.title} className="h-52 w-full object-cover" />
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+                />
               ) : (
                 <div className="flex h-52 items-center justify-center bg-secondary">
                   <Camera className="h-8 w-8 text-muted-foreground" />
@@ -353,7 +395,7 @@ export function HomePage({ content }: { content: SiteContent }) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.24, delay: index * 0.03 }}
-                  className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
+                  className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 >
                   {item.href ? (
                     <a href={item.href} target="_blank" rel="noreferrer" className="block">
@@ -434,7 +476,7 @@ export function HomePage({ content }: { content: SiteContent }) {
         </BlurFade>
         <BlurFade delay={BLUR_FADE_DELAY * 1.8} className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
-            href={`mailto:${content.meta.email}`}
+            href={`mailto:${contactEmail}`}
             className="inline-flex items-center rounded-full bg-primary px-5 py-2.5 font-semibold text-primary-foreground"
             style={typeStyles.meta}
           >

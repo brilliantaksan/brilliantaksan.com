@@ -234,8 +234,12 @@ export function ContentEditor() {
   const [success, setSuccess] = useState('');
   const [draggingProjectIndex, setDraggingProjectIndex] = useState<number | null>(null);
   const [draggingCreativeIndex, setDraggingCreativeIndex] = useState<number | null>(null);
+  const [draggingWorkIndex, setDraggingWorkIndex] = useState<number | null>(null);
+  const [draggingSocialIndex, setDraggingSocialIndex] = useState<number | null>(null);
   const [projectDropTargetIndex, setProjectDropTargetIndex] = useState<number | null>(null);
   const [creativeDropTargetIndex, setCreativeDropTargetIndex] = useState<number | null>(null);
+  const [workDropTargetIndex, setWorkDropTargetIndex] = useState<number | null>(null);
+  const [socialDropTargetIndex, setSocialDropTargetIndex] = useState<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -338,6 +342,20 @@ export function ContentEditor() {
     if (draggingCreativeIndex === null || draggingCreativeIndex === toIndex) return;
     updateContent((draft) => {
       reorderItems(draft.creative, draggingCreativeIndex, toIndex);
+    });
+  }
+
+  function dropWorkAt(toIndex: number) {
+    if (draggingWorkIndex === null || draggingWorkIndex === toIndex) return;
+    updateContent((draft) => {
+      reorderItems(draft.work, draggingWorkIndex, toIndex);
+    });
+  }
+
+  function dropSocialAt(toIndex: number) {
+    if (draggingSocialIndex === null || draggingSocialIndex === toIndex) return;
+    updateContent((draft) => {
+      reorderItems(draft.socials, draggingSocialIndex, toIndex);
     });
   }
 
@@ -498,82 +516,138 @@ export function ContentEditor() {
             Add Experience
           </button>
         </div>
+        <p className="text-xs text-muted-foreground">Drag cards to reorder your experience entries.</p>
         <div className="space-y-3">
           {content.work.map((item, index) => (
-            <div key={`work-${index}`} className="space-y-2 rounded-xl border border-border bg-background/70 p-3">
-              <div className="grid gap-2 md:grid-cols-2">
-                <input
-                  value={item.company}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].company = event.target.value))}
-                  placeholder="Company"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.title}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].title = event.target.value))}
-                  placeholder="Title"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.location || ''}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].location = event.target.value))}
-                  placeholder="Location"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.href || ''}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].href = event.target.value))}
-                  placeholder="Company URL"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.start}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].start = event.target.value))}
-                  placeholder="Start"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-                <input
-                  value={item.end || ''}
-                  onChange={(event) => updateContent((draft) => void (draft.work[index].end = event.target.value))}
-                  placeholder="End"
-                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-                />
-              </div>
-              <textarea
-                value={item.description}
-                onChange={(event) => updateContent((draft) => void (draft.work[index].description = event.target.value))}
-                placeholder="Description"
-                rows={3}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <input
-                value={(item.badges || []).join(', ')}
-                onChange={(event) =>
-                  updateContent((draft) => {
-                    draft.work[index].badges = parseCommaList(event.target.value);
-                  })
-                }
-                placeholder="Badges (comma separated)"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <MediaField
-                label="Logo Image"
-                value={item.logo || ''}
-                onChange={(nextValue) => updateContent((draft) => void (draft.work[index].logo = nextValue))}
-                accept="image/*"
-                folder="work"
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  updateContent((draft) => {
-                    draft.work.splice(index, 1);
-                  })
-                }
-                className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
-              >
-                Remove Experience
-              </button>
+            <div
+              key={`work-${index}`}
+              draggable
+              onDragStart={(event) => {
+                setDraggingWorkIndex(index);
+                event.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setWorkDropTargetIndex(index);
+              }}
+              onDragLeave={() => {
+                setWorkDropTargetIndex((current) => (current === index ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                dropWorkAt(index);
+                setDraggingWorkIndex(null);
+                setWorkDropTargetIndex(null);
+              }}
+              onDragEnd={() => {
+                setDraggingWorkIndex(null);
+                setWorkDropTargetIndex(null);
+              }}
+              className={`rounded-xl border bg-background/70 p-3 transition-colors ${
+                workDropTargetIndex === index ? 'border-primary/70 bg-primary/5' : 'border-border'
+              }`}
+            >
+              <details className="group space-y-3">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 rounded-lg bg-card/80 p-2.5 [&::-webkit-details-marker]:hidden">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                      <GripVertical className="h-4 w-4" />
+                    </span>
+                    <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border bg-background">
+                      {item.logo ? (
+                        <img src={item.logo} alt={item.company || 'Company logo'} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-muted-foreground">
+                          <ImageIcon className="h-4 w-4" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-semibold text-foreground">{item.company || `Experience ${index + 1}`}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        {[item.title, item.start && `${item.start} - ${item.end || 'Present'}`].filter(Boolean).join(' · ') || 'No details yet'}
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                </summary>
+
+                <div className="space-y-2">
+                  <div className="grid gap-2 md:grid-cols-2">
+                    <input
+                      value={item.company}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].company = event.target.value))}
+                      placeholder="Company"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.title}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].title = event.target.value))}
+                      placeholder="Title"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.location || ''}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].location = event.target.value))}
+                      placeholder="Location"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.href || ''}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].href = event.target.value))}
+                      placeholder="Company URL"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.start}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].start = event.target.value))}
+                      placeholder="Start"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                    <input
+                      value={item.end || ''}
+                      onChange={(event) => updateContent((draft) => void (draft.work[index].end = event.target.value))}
+                      placeholder="End"
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                    />
+                  </div>
+                  <textarea
+                    value={item.description}
+                    onChange={(event) => updateContent((draft) => void (draft.work[index].description = event.target.value))}
+                    placeholder="Description"
+                    rows={3}
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <input
+                    value={(item.badges || []).join(', ')}
+                    onChange={(event) =>
+                      updateContent((draft) => {
+                        draft.work[index].badges = parseCommaList(event.target.value);
+                      })
+                    }
+                    placeholder="Badges (comma separated)"
+                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                  />
+                  <MediaField
+                    label="Logo Image"
+                    value={item.logo || ''}
+                    onChange={(nextValue) => updateContent((draft) => void (draft.work[index].logo = nextValue))}
+                    accept="image/*"
+                    folder="work"
+                  />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      updateContent((draft) => {
+                        draft.work.splice(index, 1);
+                      })
+                    }
+                    className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
+                  >
+                    Remove Experience
+                  </button>
+                </div>
+              </details>
             </div>
           ))}
         </div>
@@ -1100,42 +1174,81 @@ export function ContentEditor() {
               Add Social
             </button>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Order matters: the first Instagram/GitHub/LinkedIn items are used in the bottom dock.
+          </p>
+          <p className="text-xs text-muted-foreground">Drag rows by the handle to reorder.</p>
           {content.socials.map((item, index) => (
-            <div key={`social-${index}`} className="grid gap-2 md:grid-cols-[1fr_2fr_1fr_auto]">
-              <input
-                value={item.name}
-                onChange={(event) => updateContent((draft) => void (draft.socials[index].name = event.target.value))}
-                placeholder="Name"
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <input
-                value={item.url}
-                onChange={(event) => updateContent((draft) => void (draft.socials[index].url = event.target.value))}
-                placeholder="URL"
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              />
-              <select
-                value={item.icon}
-                onChange={(event) => updateContent((draft) => void (draft.socials[index].icon = event.target.value as SocialIcon))}
-                className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
-              >
-                {SOCIAL_ICONS.map((icon) => (
-                  <option key={icon} value={icon}>
-                    {icon}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="button"
-                onClick={() =>
-                  updateContent((draft) => {
-                    draft.socials.splice(index, 1);
-                  })
-                }
-                className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
-              >
-                Remove
-              </button>
+            <div
+              key={`social-${index}`}
+              draggable
+              onDragStart={(event) => {
+                setDraggingSocialIndex(index);
+                event.dataTransfer.effectAllowed = 'move';
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                setSocialDropTargetIndex(index);
+              }}
+              onDragLeave={() => {
+                setSocialDropTargetIndex((current) => (current === index ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                dropSocialAt(index);
+                setDraggingSocialIndex(null);
+                setSocialDropTargetIndex(null);
+              }}
+              onDragEnd={() => {
+                setDraggingSocialIndex(null);
+                setSocialDropTargetIndex(null);
+              }}
+              className={`rounded-xl border bg-background/70 p-3 transition-colors ${
+                socialDropTargetIndex === index ? 'border-primary/70 bg-primary/5' : 'border-border'
+              }`}
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+                  <GripVertical className="h-4 w-4" />
+                </span>
+                <p className="truncate text-sm font-semibold text-foreground">{item.name || `Social ${index + 1}`}</p>
+              </div>
+              <div className="grid gap-2 md:grid-cols-[1fr_2fr_1fr_auto]">
+                <input
+                  value={item.name}
+                  onChange={(event) => updateContent((draft) => void (draft.socials[index].name = event.target.value))}
+                  placeholder="Name"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                />
+                <input
+                  value={item.url}
+                  onChange={(event) => updateContent((draft) => void (draft.socials[index].url = event.target.value))}
+                  placeholder="URL"
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                />
+                <select
+                  value={item.icon}
+                  onChange={(event) => updateContent((draft) => void (draft.socials[index].icon = event.target.value as SocialIcon))}
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-sm"
+                >
+                  {SOCIAL_ICONS.map((icon) => (
+                    <option key={icon} value={icon}>
+                      {icon}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateContent((draft) => {
+                      draft.socials.splice(index, 1);
+                    })
+                  }
+                  className="rounded-full border border-destructive/40 px-3 py-1 text-xs font-semibold text-destructive"
+                >
+                  Remove
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -1234,6 +1347,16 @@ export function ContentEditor() {
             className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
           />
         </label>
+        <label className="space-y-1">
+          <span className="text-xs text-muted-foreground">Button Email Target</span>
+          <input
+            value={content.contact.ctaEmail ?? ''}
+            onChange={(event) => updateContent((draft) => void (draft.contact.ctaEmail = event.target.value))}
+            placeholder={content.meta.email}
+            className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm"
+          />
+        </label>
+        <p className="text-xs text-muted-foreground">Leave blank to use the profile email.</p>
       </section>
       </div>
 

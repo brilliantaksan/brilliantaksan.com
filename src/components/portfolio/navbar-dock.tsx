@@ -9,6 +9,7 @@ import {
   Camera,
   Check,
   Code2,
+  Globe,
   Github,
   Home,
   GraduationCap,
@@ -17,7 +18,7 @@ import {
   Linkedin,
   Save
 } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ADMIN_CONTENT_SAVE_REQUEST_EVENT,
   ADMIN_CONTENT_SAVE_RESULT_EVENT,
@@ -26,6 +27,7 @@ import {
   type AdminContentSaveStateDetail
 } from '@/lib/admin-content-events';
 import { ModeToggle } from '@/components/portfolio/mode-toggle';
+import type { SocialIcon, SocialLink } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -36,11 +38,19 @@ const navItems = [
   { href: '#creative', icon: Camera, label: 'Creative' }
 ];
 
-const socialItems = [
-  { href: 'https://github.com/brilliantaksan', icon: Github, label: 'GitHub' },
-  { href: 'https://linkedin.com/in/brilliantaksan', icon: Linkedin, label: 'LinkedIn' },
-  { href: 'https://instagram.com/brilliantaksan', icon: Instagram, label: 'Instagram' }
+const DOCK_SOCIAL_ICONS: SocialIcon[] = ['instagram', 'github', 'linkedin'];
+const fallbackSocialItems: SocialLink[] = [
+  { name: 'Instagram', icon: 'instagram', url: 'https://instagram.com/brilliantaksan' },
+  { name: 'GitHub', icon: 'github', url: 'https://github.com/brilliantaksan' },
+  { name: 'LinkedIn', icon: 'linkedin', url: 'https://linkedin.com/in/brilliantaksan' }
 ];
+
+function getSocialIcon(icon: SocialIcon) {
+  if (icon === 'instagram') return Instagram;
+  if (icon === 'github') return Github;
+  if (icon === 'linkedin') return Linkedin;
+  return Globe;
+}
 
 function DockIcon({
   mouseX,
@@ -63,7 +73,7 @@ function DockIcon({
   const widthSync = useTransform(
     distance,
     compact ? [-120, 0, 120] : [-140, 0, 140],
-    compact ? [32, 38, 32] : [38, 62, 38]
+    compact ? [36, 42, 36] : [38, 62, 38]
   );
   const width = useSpring(widthSync, compact ? { mass: 0.12, stiffness: 185, damping: 20 } : { mass: 0.1, stiffness: 160, damping: 14 });
 
@@ -74,13 +84,23 @@ function DockIcon({
   );
 }
 
-export function NavbarDock() {
+export function NavbarDock({ socials = [] }: { socials?: SocialLink[] }) {
   const mouseX = useMotionValue(Infinity);
   const [isCompact, setIsCompact] = useState(false);
   const [isSavingContent, setIsSavingContent] = useState(false);
   const [saveResult, setSaveResult] = useState<'idle' | 'success' | 'error'>('idle');
   const pathname = usePathname();
   const isAdminStudio = pathname === '/admin/studio';
+  const socialItems = useMemo(() => {
+    const usedIcons = new Set<SocialIcon>();
+    const filteredItems = socials.filter((item) => {
+      if (!DOCK_SOCIAL_ICONS.includes(item.icon)) return false;
+      if (usedIcons.has(item.icon)) return false;
+      usedIcons.add(item.icon);
+      return true;
+    });
+    return filteredItems.length > 0 ? filteredItems : fallbackSocialItems;
+  }, [socials]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 639px)');
@@ -144,7 +164,7 @@ export function NavbarDock() {
       <div className="fixed inset-x-0 bottom-0 h-16 w-full bg-background/70 backdrop-blur-lg [mask-image:linear-gradient(to_top,black,transparent)]" />
       <div
         className={cn(
-          'pointer-events-auto relative z-50 mx-auto flex w-fit max-w-[calc(100vw-0.75rem)] items-center rounded-full px-1.5 py-1 sm:px-2',
+          'pointer-events-auto relative z-50 mx-auto flex w-fit max-w-[calc(100vw-0.75rem)] items-center rounded-full px-2 py-1 sm:px-2',
           isCompact ? 'gap-0' : 'gap-1',
           'border border-border/80 bg-background/90 shadow-[0_2px_10px_rgba(0,0,0,0.22)] backdrop-blur-xl',
           'dark:shadow-[0_-20px_80px_-20px_rgba(255,255,255,0.12)_inset]'
@@ -160,11 +180,11 @@ export function NavbarDock() {
                 href={item.href}
                 className={cn(
                   'flex items-center justify-center rounded-full text-foreground transition hover:bg-secondary',
-                  isCompact ? 'h-8 w-8' : 'h-12 w-12'
+                  isCompact ? 'h-9 w-9' : 'h-12 w-12'
                 )}
                 title={item.label}
               >
-                <Icon className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]')} strokeWidth={1.6} />
+                <Icon className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]')} strokeWidth={1.6} />
               </Link>
             </DockIcon>
           );
@@ -173,20 +193,20 @@ export function NavbarDock() {
         <div className={cn('w-px bg-border', isCompact ? 'mx-0.5 h-6' : 'mx-1 h-8')} />
 
         {socialItems.map((item) => {
-          const Icon = item.icon;
+          const Icon = getSocialIcon(item.icon);
           return (
-            <DockIcon key={item.label} mouseX={mouseX} compact={isCompact}>
+            <DockIcon key={`${item.name}-${item.url}`} mouseX={mouseX} compact={isCompact}>
               <a
-                href={item.href}
+                href={item.url}
                 target="_blank"
                 rel="noreferrer"
                 className={cn(
                   'flex items-center justify-center rounded-full text-foreground transition hover:bg-secondary',
-                  isCompact ? 'h-8 w-8' : 'h-12 w-12'
+                  isCompact ? 'h-9 w-9' : 'h-12 w-12'
                 )}
-                title={item.label}
+                title={item.name}
               >
-                <Icon className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]')} strokeWidth={1.7} />
+                <Icon className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]')} strokeWidth={1.7} />
               </a>
             </DockIcon>
           );
@@ -202,7 +222,7 @@ export function NavbarDock() {
                 disabled={isSavingContent}
                 className={cn(
                   'flex items-center justify-center rounded-full transition',
-                  isCompact ? 'h-8 w-8' : 'h-12 w-12',
+                  isCompact ? 'h-9 w-9' : 'h-12 w-12',
                   saveResult === 'success'
                     ? 'bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/20 dark:text-emerald-300'
                     : saveResult === 'error'
@@ -214,13 +234,13 @@ export function NavbarDock() {
                 aria-label={saveButtonTitle}
               >
                 {isSavingContent ? (
-                  <Loader2 className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]', 'animate-spin')} strokeWidth={1.8} />
+                  <Loader2 className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]', 'animate-spin')} strokeWidth={1.8} />
                 ) : saveResult === 'success' ? (
-                  <Check className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]')} strokeWidth={1.9} />
+                  <Check className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]')} strokeWidth={1.9} />
                 ) : saveResult === 'error' ? (
-                  <AlertCircle className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]')} strokeWidth={1.9} />
+                  <AlertCircle className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]')} strokeWidth={1.9} />
                 ) : (
-                  <Save className={cn(isCompact ? 'h-[15px] w-[15px]' : 'h-[18px] w-[18px]')} strokeWidth={1.8} />
+                  <Save className={cn(isCompact ? 'h-4 w-4' : 'h-[18px] w-[18px]')} strokeWidth={1.8} />
                 )}
               </button>
             </DockIcon>
