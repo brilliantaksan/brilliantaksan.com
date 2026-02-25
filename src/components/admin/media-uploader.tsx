@@ -1,6 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import {
+  createAdminMuxDirectUpload,
+  uploadFileToMux,
+  waitForAdminMuxPlaybackUrl
+} from '@/lib/mux-upload-client';
 import { getSupabaseBrowserClient } from '@/lib/supabase-browser';
 
 function sanitizeFilename(value: string) {
@@ -23,6 +28,14 @@ export function MediaUploader() {
     setUrl('');
 
     try {
+      if (file.type.startsWith('video/')) {
+        const { uploadId, uploadUrl } = await createAdminMuxDirectUpload();
+        await uploadFileToMux(uploadUrl, file);
+        const playbackUrl = await waitForAdminMuxPlaybackUrl(uploadId);
+        setUrl(playbackUrl);
+        return;
+      }
+
       const supabase = getSupabaseBrowserClient();
       const filePath = `uploads/${Date.now()}-${sanitizeFilename(file.name)}`;
 
@@ -47,9 +60,9 @@ export function MediaUploader() {
 
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-card/70 p-4">
-      <p className="text-sm font-semibold">Supabase Media Upload</p>
+      <p className="text-sm font-semibold">Media Upload</p>
       <p className="text-sm text-muted-foreground">
-        Upload image/video files here, then paste the URL into content fields in the CMS.
+        Video files upload to Mux. Image files upload to Supabase.
       </p>
       <input
         type="file"
@@ -63,7 +76,7 @@ export function MediaUploader() {
         disabled={!file || uploading}
         className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
       >
-        {uploading ? 'Uploading...' : 'Upload to Supabase'}
+        {uploading ? 'Uploading...' : 'Upload'}
       </button>
       {url ? (
         <div className="space-y-1 rounded-lg border border-border bg-background p-3">

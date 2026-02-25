@@ -7,6 +7,11 @@ import {
   ADMIN_CONTENT_SAVE_RESULT_EVENT,
   ADMIN_CONTENT_SAVE_STATE_EVENT
 } from '@/lib/admin-content-events';
+import {
+  createAdminMuxDirectUpload,
+  uploadFileToMux,
+  waitForAdminMuxPlaybackUrl
+} from '@/lib/mux-upload-client';
 import { getSupabaseBrowserClient } from '@/lib/supabase-browser';
 import type {
   BookingOption,
@@ -60,6 +65,16 @@ function sanitizeFilename(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9.\-_]/g, '-');
 }
 
+function isVideoFile(file: File, accept: string) {
+  if (file.type.startsWith('video/')) return true;
+  return accept.includes('video');
+}
+
+function isVideoUrl(value: string) {
+  if (!value) return false;
+  return /\.(mp4|mov|webm|m3u8)(\?|#|$)/i.test(value) || value.includes('stream.mux.com/');
+}
+
 function reorderItems<T>(items: T[], fromIndex: number, toIndex: number) {
   if (fromIndex === toIndex) return;
   const [moved] = items.splice(fromIndex, 1);
@@ -91,6 +106,15 @@ function MediaField({
     setError('');
 
     try {
+      if (isVideoFile(file, accept)) {
+        const { uploadId, uploadUrl } = await createAdminMuxDirectUpload();
+        await uploadFileToMux(uploadUrl, file);
+        const playbackUrl = await waitForAdminMuxPlaybackUrl(uploadId);
+        onChange(playbackUrl);
+        setFile(null);
+        return;
+      }
+
       const supabase = getSupabaseBrowserClient();
       const filePath = `${folder}/${Date.now()}-${sanitizeFilename(file.name)}`;
       const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file, {
@@ -113,7 +137,7 @@ function MediaField({
     }
   }
 
-  const looksLikeVideo = value.endsWith('.mp4') || value.endsWith('.mov') || value.endsWith('.webm');
+  const looksLikeVideo = isVideoUrl(value);
 
   return (
     <div className="space-y-2 rounded-xl border border-border bg-background/70 p-3">

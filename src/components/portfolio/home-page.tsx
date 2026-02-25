@@ -406,10 +406,25 @@ export function HomePage({ content }: { content: SiteContent }) {
                 <video
                   src={item.video}
                   className="h-52 w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
-                  autoPlay
-                  loop
                   muted
                   playsInline
+                  controls
+                  preload="none"
+                  poster={item.image || undefined}
+                  onMouseEnter={(event) => {
+                    void event.currentTarget.play().catch(() => {});
+                  }}
+                  onMouseLeave={(event) => {
+                    event.currentTarget.pause();
+                    event.currentTarget.currentTime = 0;
+                  }}
+                  onFocus={(event) => {
+                    void event.currentTarget.play().catch(() => {});
+                  }}
+                  onBlur={(event) => {
+                    event.currentTarget.pause();
+                    event.currentTarget.currentTime = 0;
+                  }}
                 />
               ) : item.image ? (
                 <img

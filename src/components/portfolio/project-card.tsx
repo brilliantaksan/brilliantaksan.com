@@ -56,10 +56,25 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
           <video
             className="h-48 w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.01]"
             src={project.video}
-            autoPlay
-            loop
             muted
             playsInline
+            controls
+            preload="none"
+            poster={project.image || undefined}
+            onMouseEnter={(event) => {
+              void event.currentTarget.play().catch(() => {});
+            }}
+            onMouseLeave={(event) => {
+              event.currentTarget.pause();
+              event.currentTarget.currentTime = 0;
+            }}
+            onFocus={(event) => {
+              void event.currentTarget.play().catch(() => {});
+            }}
+            onBlur={(event) => {
+              event.currentTarget.pause();
+              event.currentTarget.currentTime = 0;
+            }}
           />
         ) : project.image ? (
           <img
