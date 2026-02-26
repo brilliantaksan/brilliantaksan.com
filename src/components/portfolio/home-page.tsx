@@ -14,6 +14,7 @@ import {
 import { type CSSProperties, useMemo, useState } from 'react';
 import { BlurFade } from '@/components/magic/blur-fade';
 import { ProjectCard } from '@/components/portfolio/project-card';
+import { muxThumbnailUrlFromVideo } from '@/lib/mux-playback';
 import { Badge } from '@/components/ui/badge';
 import { designTokens } from '@/lib/design';
 import type { EducationItem, SiteContent, SocialIcon, WorkItem } from '@/lib/types';
@@ -402,6 +403,7 @@ export function HomePage({ content }: { content: SiteContent }) {
         <AnimatePresence mode="popLayout">
           <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {filteredCreative.map((item, index) => {
+              const videoPoster = item.image || muxThumbnailUrlFromVideo(item.video) || undefined;
               const mediaNode = item.video ? (
                 <video
                   src={item.video}
@@ -410,7 +412,7 @@ export function HomePage({ content }: { content: SiteContent }) {
                   playsInline
                   controls
                   preload="none"
-                  poster={item.image || undefined}
+                  poster={videoPoster}
                   onMouseEnter={(event) => {
                     void event.currentTarget.play().catch(() => {});
                   }}
@@ -448,30 +450,43 @@ export function HomePage({ content }: { content: SiteContent }) {
                   transition={{ duration: 0.24, delay: index * 0.03 }}
                   className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
                 >
+                  {mediaNode}
+
                   {item.href ? (
-                    <a href={item.href} target="_blank" rel="noreferrer" className="block">
-                      {mediaNode}
+                    <a href={item.href} target="_blank" rel="noreferrer" className="block space-y-2 p-4 transition-colors hover:bg-secondary/50">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-semibold" style={typeStyles.cardTitle}>{item.title}</h3>
+                        <span className="uppercase text-muted-foreground" style={typeStyles.pill}>{item.year}</span>
+                      </div>
+                      <p className="text-muted-foreground" style={typeStyles.meta}>{item.caption}</p>
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="rounded-full bg-secondary px-2 py-1 text-muted-foreground" style={typeStyles.pill}>
+                          {item.client}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-muted-foreground" style={typeStyles.pill}>
+                          {item.type === 'video' ? <Play className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5" />}
+                          {item.type === 'video' ? 'Video' : 'Photo'}
+                        </span>
+                      </div>
                     </a>
                   ) : (
-                    mediaNode
+                    <div className="space-y-2 p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="font-semibold" style={typeStyles.cardTitle}>{item.title}</h3>
+                        <span className="uppercase text-muted-foreground" style={typeStyles.pill}>{item.year}</span>
+                      </div>
+                      <p className="text-muted-foreground" style={typeStyles.meta}>{item.caption}</p>
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="rounded-full bg-secondary px-2 py-1 text-muted-foreground" style={typeStyles.pill}>
+                          {item.client}
+                        </span>
+                        <span className="inline-flex items-center gap-1 text-muted-foreground" style={typeStyles.pill}>
+                          {item.type === 'video' ? <Play className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5" />}
+                          {item.type === 'video' ? 'Video' : 'Photo'}
+                        </span>
+                      </div>
+                    </div>
                   )}
-
-                  <div className="space-y-2 p-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-semibold" style={typeStyles.cardTitle}>{item.title}</h3>
-                      <span className="uppercase text-muted-foreground" style={typeStyles.pill}>{item.year}</span>
-                    </div>
-                    <p className="text-muted-foreground" style={typeStyles.meta}>{item.caption}</p>
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="rounded-full bg-secondary px-2 py-1 text-muted-foreground" style={typeStyles.pill}>
-                        {item.client}
-                      </span>
-                      <span className="inline-flex items-center gap-1 text-muted-foreground" style={typeStyles.pill}>
-                        {item.type === 'video' ? <Play className="h-3.5 w-3.5" /> : <Camera className="h-3.5 w-3.5" />}
-                        {item.type === 'video' ? 'Video' : 'Photo'}
-                      </span>
-                    </div>
-                  </div>
                 </motion.article>
               );
             })}

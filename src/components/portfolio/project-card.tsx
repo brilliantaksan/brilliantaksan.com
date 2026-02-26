@@ -1,5 +1,6 @@
 import { Camera, Github, Globe, Linkedin, Youtube } from 'lucide-react';
 import { designTokens } from '@/lib/design';
+import { muxThumbnailUrlFromVideo } from '@/lib/mux-playback';
 import { Badge } from '@/components/ui/badge';
 import type { ProjectItem, ProjectLink } from '@/lib/types';
 
@@ -48,6 +49,7 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
     lineHeight: designTokens.typography.pill.lineHeight * globalLineHeightScale,
     letterSpacing: designTokens.typography.pill.letterSpacing
   };
+  const videoPoster = project.image || muxThumbnailUrlFromVideo(project.video) || undefined;
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card/95 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
@@ -60,7 +62,7 @@ export function ProjectCard({ project }: { project: ProjectItem }) {
             playsInline
             controls
             preload="none"
-            poster={project.image || undefined}
+            poster={videoPoster}
             onMouseEnter={(event) => {
               void event.currentTarget.play().catch(() => {});
             }}
